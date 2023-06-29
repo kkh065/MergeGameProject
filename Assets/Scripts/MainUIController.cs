@@ -8,12 +8,7 @@ using UnityEngine.UIElements.Experimental;
 public class MainUIController : MonoBehaviour
 {
 
-    private void Awake()
-    {
-        MergeInventoryToggleIsON();
-    }
-
-    #region 토글제어
+    #region 지역변수
 
     [SerializeField] GameObject _character;
     [SerializeField] GameObject _upgrade;
@@ -21,9 +16,19 @@ public class MainUIController : MonoBehaviour
     [SerializeField] GameObject _contents;
     [SerializeField] GameObject _shop;
 
+    #endregion
+
+    private void Awake()
+    {
+        MergeInventoryToggleIsON();
+    }
+
+    #region 토글제어
+
     public void CharacterToggleIsON()
     {
         AllTabClose();
+        CharacterOpen();
     }
 
     public void UpgradeToggleIsON()
@@ -35,16 +40,19 @@ public class MainUIController : MonoBehaviour
     public void MergeInventoryToggleIsON()
     {
         AllTabClose();
+        MergeInventoryOpen();
     }
 
     public void ContentsToggleIsON()
     {
         AllTabClose();
+        ContentsOpen();
     }
 
     public void ShopToggleIsON()
     {
         AllTabClose();
+        ShopOpen();
     }
     
     void AllTabClose()
@@ -60,8 +68,16 @@ public class MainUIController : MonoBehaviour
 
     #endregion
 
+    #region 캐릭터관리창
 
-    #region 업그레이드탭
+    void CharacterOpen()
+    {
+        _character.SetActive(true);
+    }
+
+    #endregion
+
+    #region 업그레이드창
 
     [SerializeField] GameObject _goldUpgrade;
     [SerializeField] GameObject _managementUpgrade;
@@ -148,6 +164,33 @@ public class MainUIController : MonoBehaviour
         _specialUpgrade.SetActive(true);
     }
 
+
+    #endregion
+
+    #region 합성창
+
+    void MergeInventoryOpen()
+    {
+        _mergeInventory.SetActive(true);
+    }
+
+    #endregion
+
+    #region 컨텐츠창
+
+    void ContentsOpen()
+    {
+        _contents.SetActive(true);
+    }
+
+    #endregion
+
+    #region 상점창
+
+    void ShopOpen()
+    {
+        _shop.SetActive(true);
+    }
 
     #endregion
 }
