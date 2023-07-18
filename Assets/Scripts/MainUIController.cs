@@ -1,3 +1,4 @@
+using Mono.Cecil;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +9,7 @@ using UnityEngine.UIElements.Experimental;
 public class MainUIController : MonoBehaviour
 {
 
-    #region ��������
+    #region 지역변수
 
     [SerializeField] GameObject _character;
     [SerializeField] GameObject _upgrade;
@@ -23,7 +24,7 @@ public class MainUIController : MonoBehaviour
         MergeInventoryToggleIsON();
     }
 
-    #region �������
+    #region 토글제어
 
     public void CharacterToggleIsON()
     {
@@ -68,7 +69,7 @@ public class MainUIController : MonoBehaviour
 
     #endregion
 
-    #region ĳ���Ͱ���â
+    #region 캐릭터관리창
 
     void CharacterOpen()
     {
@@ -77,7 +78,7 @@ public class MainUIController : MonoBehaviour
 
     #endregion
 
-    #region ���׷��̵�â
+    #region 업그레이드창
 
     [SerializeField] GameObject _goldUpgrade;
     [SerializeField] GameObject _managementUpgrade;
@@ -85,14 +86,15 @@ public class MainUIController : MonoBehaviour
     [SerializeField] GameObject _makingUpgrade;
     [SerializeField] GameObject _specialUpgrade;
 
-    //���׷��̵� �� ����
+    [SerializeField] GameObject _upgradeTab;
+    //업그레이드 탭 오픈
     void UpgradeOpne()
     {
         _upgrade.SetActive(true);
         GoldUpgradeToggleOn();
     }
 
-    //���׷��̵� �� �������
+    //업그레이드 탭 토글제어
 
     public void GoldUpgradeToggleOn()
     {
@@ -133,41 +135,91 @@ public class MainUIController : MonoBehaviour
         _specialUpgrade.SetActive(false);
     }
 
+    void InitializedUpgradeTab()
+    {
+        UpgradeTabData tab = new UpgradeTabData();
+        tab.NowLevel = Data.Instance.UpgradeData.GoldAttackDamageLevel;
+        tab.MaxLevel = 99999;
+        tab.Name = "기본공격력";
+        tab.Increase = 5;
+        tab.Price = 5 * tab.NowLevel;
+        tab.Explan = $"{tab.Name}이 {tab.Increase * tab.NowLevel}만큼 증가";
+        tab.Type = UpgradeType.Gold;
+        tab.ButtonIndex = 0;
+
+        InstantiateTab(tab, _goldUpgrade.transform);
+
+        //각 창에다가 업그레이드 탭 생성 -> 리스트로 만들어서 제이슨으로 저장후 불러와서 생성하자
+        //이넘으로 업그레이드 타입 만들고 같이 저장했다가, 타입별로 부모 스위치케이스 ㄱㄱ
+        //인덱스를 인자로 받아와서 스위치케이스로 나누기. 함수를 버튼에 델리게이트로 붙이면 인자값에 인덱스를 넣을 수 있을텐데
+    }
+
+    void InstantiateTab(UpgradeTabData tabData, Transform tr)
+    {
+        GameObject tabGo = Instantiate(_upgradeTab, tr);
+        tabGo.transform.Find("LevelText").GetComponent<Text>().text = $"LV.{tabData.NowLevel}";
+        tabGo.transform.Find("UpgradeName").GetComponent<Text>().text = $"{tabData.Name}(MAX {tabData.MaxLevel})";
+        tabGo.transform.Find("UpgradeInfo").GetComponent<Text>().text = tabData.Explan;
+        tabGo.transform.Find("TextUpgradeValue").GetComponent<Text>().text = $"+ {tabData.Increase}";
+        tabGo.transform.Find("TextPrice").GetComponent<Text>().text = (tabData.Price * tabData.NowLevel).ToString();
+        tabGo.transform.Find("Button").GetComponent<Button>().onClick.AddListener(() => TabUpgradeButton(tabData.Type, tabData.ButtonIndex));
+    }
+
+    void TabUpgradeButton(UpgradeType type, int idx)
+    {
+        //골드탭 업그레이드 버튼 눌렸을때 기능구현
+        switch (type)
+        {
+            case UpgradeType.Gold:                
+                break;
+            case UpgradeType.Management:
+                break;
+            case UpgradeType.Attack:
+                break;
+            case UpgradeType.Making:
+                break;
+        }
+    }
+
+    void UpgradeTabUpdate()
+    {
+        //아니면 해당 업그레이드가 눌렸을경우 그 탭을 어딘지 찾아서 그 탭만 업데이트 
+    }
 
     void GoldUpgradeOpen()
     {
-        // ��� ���׷��̵� ���� ������Ʈ
+        // 골드 업그레이드 내역 업데이트
         _goldUpgrade.SetActive(true);        
     }
 
     void ManagementUpgradeOpen()
     {
-        // ���� ���׷��̵� ���� ������Ʈ
+        // 관리 업그레이드 내역 업데이트
         _managementUpgrade.SetActive(true);
     }
 
     void AttckUpgradeOpen()
     {
-        // ���� ���׷��̵� ���� ������Ʈ
+        // 공격 업그레이드 내역 업데이트
         _attckUpgrade.SetActive(true);
     }
 
     void MakingUpgradeOpen()
     {
-        // ���� ���׷��̵� ���� ������Ʈ
+        // 제작 업그레이드 내역 업데이트
         _makingUpgrade.SetActive(true);
     }
 
     void SpecialUpgradeOpen()
     {
-        // Ư�� ���׷��̵� ���� ������Ʈ
+        // 특수 업그레이드 내역 업데이트
         _specialUpgrade.SetActive(true);
     }
 
 
     #endregion
 
-    #region �ռ�â
+    #region 합성창
 
     void MergeInventoryOpen()
     {
@@ -176,7 +228,7 @@ public class MainUIController : MonoBehaviour
 
     #endregion
 
-    #region ������â
+    #region 컨텐츠창
 
     void ContentsOpen()
     {
@@ -185,7 +237,7 @@ public class MainUIController : MonoBehaviour
 
     #endregion
 
-    #region ����â
+    #region 상점창
 
     void ShopOpen()
     {
@@ -193,4 +245,40 @@ public class MainUIController : MonoBehaviour
     }
 
     #endregion
+}
+
+
+public class UpgradeTabData
+{
+    int _nowLevel = 0;
+    public int NowLevel { get { return _nowLevel; } set { _nowLevel = value; } }
+
+    int _maxLevel = 0;
+    public int MaxLevel { get { return _maxLevel; } set { _maxLevel = value; } }
+
+    int _increase = 0;
+    public int Increase { get { return _increase; } set { _increase = value; } }
+
+    string _name = "";
+    public string Name { get { return _name; } set { _name = value; } }
+
+    string _explan = "";
+    public string Explan { get { return _explan; } set { _explan = value; } }
+
+    int _price = 0;
+    public int Price { get { return _price; } set { _price = value; } }
+
+    UpgradeType _type;
+    public UpgradeType Type { get { return _type; } set { _type = value; } }
+
+    int _buttonIndex = 0;
+    public int ButtonIndex { get { return _buttonIndex; } set { _buttonIndex = value; } }
+}
+
+public enum UpgradeType
+{
+    Gold,
+    Management,
+    Attack,
+    Making,
 }
