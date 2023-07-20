@@ -1,12 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class Data : MonoBehaviour
 {
     #region 지역변수
-    UpgradeData _upgradeData = new UpgradeData();
-    public UpgradeData UpgradeData { get; set; }
+    UpgradeData _upgradeData;
+    public UpgradeData UpgradeData { get { return _upgradeData; } set { _upgradeData = value; } }
     #endregion
 
     private static Data instance = null;
@@ -44,7 +46,8 @@ public class Data : MonoBehaviour
 
     void Start()
     {
-        
+        _upgradeData = new UpgradeData();
+        ReadUpgradeData();
     }
 
 
@@ -56,19 +59,40 @@ public class Data : MonoBehaviour
     void SaveUpgradeData()
     {
         //업그레이드 데이터를 제이슨파일로 저장
-        //_upgradeData
+        string Json = JsonUtility.ToJson(_upgradeData);
+
+        string path = Application.persistentDataPath + "/UpgradeLevelData.json";
+
+        using (StreamWriter outStream = File.CreateText(path))
+        {
+            outStream.Write(Json);
+        }
     }
 
     void ReadUpgradeData()
     {
         //제이슨파일에서 업그레이드 데이터 읽어오기
-        //_upgradeData
+        if (File.Exists(Application.persistentDataPath + "/UpgradeLevelData.json"))
+        {
+            string json = "";
+            using (StreamReader inStream = new StreamReader(Application.persistentDataPath + "/UpgradeLevelData.json"))
+            {
+                json = inStream.ReadToEnd();
+            }
+
+            if (string.IsNullOrEmpty(json) == false)
+            {
+                _upgradeData = JsonUtility.FromJson<UpgradeData>(json);
+            }
+            else Debug.Log("내용이 없습니다.");
+        }
+        else Debug.Log("파일이 없습니다.");
     }
 }
 
 #region 세이브데이터 클래스
 
-
+[Serializable]
 public class UpgradeData
 {
     //업그레이드 데이터
