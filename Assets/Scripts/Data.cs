@@ -86,7 +86,11 @@ public class Data : MonoBehaviour
             }
             else Debug.Log("내용이 없습니다.");
         }
-        else Debug.Log("파일이 없습니다.");
+        else
+        {
+            Debug.Log("파일이 없습니다.");
+            SaveUpgradeData();
+        }
     }
 }
 

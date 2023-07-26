@@ -36,12 +36,23 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        
+
     }
 
 
     void Update()
     {
         
+    }
+
+    public int GetMakingArrowLevel() //제작화살레벨 업그레이드 추가시 여기 수정해야함
+    {
+        return 1 + Data.Instance.UpgradeData.MakingArrowLevelLevel + Data.Instance.UpgradeData.DiaMakingArrowLevelLevel;
+    }
+
+    public int GetMaxArrowLevel()
+    {
+        //내 가장 높은 화살 레벨?
+        return 0;
     }
 }

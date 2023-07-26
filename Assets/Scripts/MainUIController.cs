@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -36,6 +37,22 @@ public class MainUIController : MonoBehaviour
             //UpgradeTabDataCreate();
         }
 
+
+        //자동제작
+        _autoMakingTimer += Time.deltaTime;
+        if(_autoMakingTimer > 10)
+        {
+            MakingArrow();
+            _autoMakingTimer = 0;
+        }
+
+        //자동합성
+        _autoMergeTimer += Time.deltaTime;
+        if (_autoMergeTimer > 10)
+        {
+            MergeArrow();
+            _autoMakingTimer = 0;
+        }
     }
 
     #region 토글제어
@@ -463,10 +480,75 @@ public class MainUIController : MonoBehaviour
 
     #region 합성창
 
+    [SerializeField] Transform _inventorySlot;
+    int[] _equipArrowData;
+    List<int> _inventoryData = new List<int>();
+    float _autoMergeTimer = 0;
+    float _autoMakingTimer = 0;
+
     void MergeInventoryOpen()
     {
         _mergeInventory.SetActive(true);
     }
+
+    //장비창
+    void UpdateEquip()
+    {
+        _equipArrowData = new int[Data.Instance.UpgradeData.ManagementArcherLevel + 1];
+        //장비창 갱신 - 세이브데이터에다가 인벤토리 데이터랑 장비창 데이터 저장하는것 만들기
+    }
+
+
+    //인벤토리
+    void InventorySlotAllClose()
+    {
+        for (int i = 0; i < _inventorySlot.childCount; i++)
+        {
+            _inventorySlot.GetChild(i).gameObject.SetActive(false);
+        }
+    }
+
+    void UpdateInventory()
+    {
+        //인벤토리 데이터를 누군가가 리스트로 들고있긴 해야겠네.
+        for(int i = 0; i < _inventoryData.Count; i++)
+        {
+            _inventorySlot.GetChild(i).GetComponent<InventorySlot>().Init(_inventoryData[i]);
+        }
+    }
+
+    void MakingArrow()
+    {
+        //화살 제작 - 인벤토리 최대슬롯갯수를 초과하면 더이상 실행되지 않도록 해야함.40개
+        if (_inventoryData.Count < 40)
+        {
+            _inventoryData.Add(GameManager.Instance.GetMakingArrowLevel());
+        }
+        //인벤토리 슬롯을 하나 더 어떻게 받아와서 킬 것인가?
+    }
+
+    void MergeArrow()
+    {
+        //화살 조합 어떻게 구현할 지 고민해보기.
+    }
+
+   
+
+    // 화살클래스를 만들기 : 화살의정보는 화살의 레벨 뿐인가? 이미지는 화살레벨 10단위로 변하게끔 구현하고...
+    // 인벤토리 하나당 각자 스크립트를 들고 있고 거기에 자기 정보를 담아둬야함...(인벤토리 인덱스 정보 필요)
+    // 미리 생성해두고 켯다 껏다 하려면, 게임오브젝트 리스트를 들고있어야 하는데..겟차일드로 해결
+
+    // 장착인벤토리 리스트 - 아처수 업그레이드에 따라 최대치 증가해야함 최대 8개
+    // 비어있는 상태 없음. 기본적으로 데이터가 없으면 제작화살레벨과 동일한 화살 착용하게끔 적용
+    // 제작화살레벨이 오르면 장착인벤토리 리스트를 돌면서 제작레벨보다 낮은 친구들을 전부 제작레벨로 만들어줌
+    // 장착(교환) 방식 구현해야함. 드래그 앤 드롭으로 구현, 조합은 나중에 구현(자동조합만 먼저 구현)
+
+    // 인벤토리 리스트
+    // 자동제작 : 리스트에 추가 및 제일뒤에 아이템 생성 - 현재 제작화살레벨(업그레이드 반영) 데이터 필요
+    // 자동조합 : 리스트에서 한바퀴돌면서 동일레벨 화살 찾으면 합성 후 인벤토리 업데이트 - 최대 화살레벨 갱신
+
+    // 씬에다가 인벤토리 슬롯 만들어야함. 프리펩일 필요는 없을듯
+
 
     #endregion
 
