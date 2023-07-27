@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -39,10 +40,9 @@ public class GameManager : MonoBehaviour
 
     }
 
-
     void Update()
     {
-        
+
     }
 
     public int GetMakingArrowLevel() //제작화살레벨 업그레이드 추가시 여기 수정해야함

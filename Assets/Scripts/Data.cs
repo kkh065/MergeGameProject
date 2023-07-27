@@ -91,6 +91,8 @@ public class Data : MonoBehaviour
             Debug.Log("파일이 없습니다.");
             SaveUpgradeData();
         }
+
+        Debug.Log("로딩완료");
     }
 }
 

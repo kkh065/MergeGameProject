@@ -27,7 +27,19 @@ public class MainUIController : MonoBehaviour
     {
         datas = new UpgradeTabList();
         datas.UpgradeList = new List<UpgradeTabData>();
+        InitializedGame();
+    }
+
+    public void InitializedGame()
+    {
+        //업그레이드 슬롯 관련 초기화
         InitializedUpgradeTab();
+
+        //인벤토리 관련 초기화
+        InventorySlotAllClose();
+        //InitEquipSlot();
+        //인벤토리 데이터를 세이브파일에서 읽어오는 작업 해야함
+        UpdateInventory(); // 인벤토리 데이터에 따라서 인벤토리창을 업데이트
     }
 
     private void Update()
@@ -51,7 +63,7 @@ public class MainUIController : MonoBehaviour
         if (_autoMergeTimer > 10)
         {
             MergeArrow();
-            _autoMakingTimer = 0;
+            _autoMergeTimer = 0;
         }
     }
 
@@ -481,6 +493,7 @@ public class MainUIController : MonoBehaviour
     #region 합성창
 
     [SerializeField] Transform _inventorySlot;
+    [SerializeField] Transform _equipSlot;
     int[] _equipArrowData;
     List<int> _inventoryData = new List<int>();
     float _autoMergeTimer = 0;
@@ -491,10 +504,18 @@ public class MainUIController : MonoBehaviour
         _mergeInventory.SetActive(true);
     }
 
+    void InitEquipSlot()
+    {
+        _equipArrowData = new int[Data.Instance.UpgradeData.ManagementArcherLevel + 1];
+        for (int i = 0; i < _equipSlot.childCount; i++)
+        {
+            _equipSlot.GetChild(i).gameObject.SetActive(i < Data.Instance.UpgradeData.ManagementArcherLevel + 1);
+        }
+    }
+
     //장비창
     void UpdateEquip()
     {
-        _equipArrowData = new int[Data.Instance.UpgradeData.ManagementArcherLevel + 1];
         //장비창 갱신 - 세이브데이터에다가 인벤토리 데이터랑 장비창 데이터 저장하는것 만들기
     }
 
@@ -517,17 +538,17 @@ public class MainUIController : MonoBehaviour
         }
     }
 
-    void MakingArrow()
+    public void MakingArrow()
     {
-        //화살 제작 - 인벤토리 최대슬롯갯수를 초과하면 더이상 실행되지 않도록 해야함.40개
+        //제작 쿨타임 만들어야함. 쿨타임만들기.
         if (_inventoryData.Count < 40)
         {
             _inventoryData.Add(GameManager.Instance.GetMakingArrowLevel());
+            _inventorySlot.GetChild(_inventoryData.Count - 1).GetComponent<InventorySlot>().Init(_inventoryData[_inventoryData.Count - 1]);
         }
-        //인벤토리 슬롯을 하나 더 어떻게 받아와서 킬 것인가?
     }
 
-    void MergeArrow()
+    public void MergeArrow()
     {
         //화살 조합 어떻게 구현할 지 고민해보기.
     }
@@ -543,8 +564,8 @@ public class MainUIController : MonoBehaviour
     // 제작화살레벨이 오르면 장착인벤토리 리스트를 돌면서 제작레벨보다 낮은 친구들을 전부 제작레벨로 만들어줌
     // 장착(교환) 방식 구현해야함. 드래그 앤 드롭으로 구현, 조합은 나중에 구현(자동조합만 먼저 구현)
 
-    // 인벤토리 리스트
     // 자동제작 : 리스트에 추가 및 제일뒤에 아이템 생성 - 현재 제작화살레벨(업그레이드 반영) 데이터 필요
+    // 리스트는 
     // 자동조합 : 리스트에서 한바퀴돌면서 동일레벨 화살 찾으면 합성 후 인벤토리 업데이트 - 최대 화살레벨 갱신
 
     // 씬에다가 인벤토리 슬롯 만들어야함. 프리펩일 필요는 없을듯
