@@ -8,8 +8,6 @@ public class InventorySlot : MonoBehaviour
     int _ArrowLevel = 0;
 
 
-    
-
     public void Init(int level)
     {
         _ArrowLevel = level;

@@ -65,6 +65,15 @@ public class MainUIController : MonoBehaviour
             MergeArrow();
             _autoMergeTimer = 0;
         }
+
+        _autoSaveTimer += Time.deltaTime;
+        //자동저장
+        if (_autoSaveTimer > 600)
+        {
+            Data.Instance.SaveInventoryData(_equipArrowData, _inventoryData);
+            _autoSaveTimer = 0;
+        }
+        
     }
 
     #region 토글제어
@@ -498,6 +507,7 @@ public class MainUIController : MonoBehaviour
     List<int> _inventoryData = new List<int>();
     float _autoMergeTimer = 0;
     float _autoMakingTimer = 0;
+    float _autoSaveTimer = 0;
 
     void MergeInventoryOpen()
     {
