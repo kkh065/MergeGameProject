@@ -11,7 +11,10 @@ public class Data : MonoBehaviour
     #region 지역변수
     UpgradeData _upgradeData;
     ArrowLevelData _arrowLevelData;
+    UpgradeTabList datas;
     public UpgradeData UpgradeData { get { return _upgradeData; } set { _upgradeData = value; } }
+    public ArrowLevelData ArrowLevelData { get { return _arrowLevelData; } set { _arrowLevelData = value; } }
+    public UpgradeTabList Datas { get { return datas; } set { datas = value; } }
 
     public bool IsLoadEnd { private set; get; }
     #endregion
@@ -53,6 +56,8 @@ public class Data : MonoBehaviour
     {
         _upgradeData = new UpgradeData();
         _arrowLevelData = new ArrowLevelData();
+        datas = new UpgradeTabList();
+        datas.UpgradeList = new List<UpgradeTabData>();
         ReadUpgradeData();        
     }
 
@@ -91,6 +96,203 @@ public class Data : MonoBehaviour
         }
     }
 
+    void UpgradeTabDataCreate()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            UpgradeTabData tab = new UpgradeTabData();
+            tab.NowLevel = Data.Instance.UpgradeData.GoldAttackDamageLevel;
+            tab.MaxLevel = 99999;
+            tab.Name = "기본공격력";
+            tab.Increase = 5;
+            tab.Price = 5 * tab.NowLevel;
+            tab.Explan = $"{tab.Name}이 {tab.Increase * tab.NowLevel}만큼 증가";
+            tab.Type = UpgradeType.Gold;
+            tab.ButtonIndex = 0;
+            datas.UpgradeList.Add(tab);
+
+            tab = new UpgradeTabData();
+            tab.NowLevel = Data.Instance.UpgradeData.GoldAttackSpeedLevel;
+            tab.MaxLevel = 20;
+            tab.Name = "공격속도";
+            tab.Increase = 0.01f;
+            tab.Price = 5 * tab.NowLevel;
+            tab.Explan = $"{tab.Name}이 {tab.Increase * tab.NowLevel}만큼 증가";
+            tab.Type = UpgradeType.Gold;
+            tab.ButtonIndex = 1;
+            datas.UpgradeList.Add(tab);
+
+            tab = new UpgradeTabData();
+            tab.NowLevel = Data.Instance.UpgradeData.GoldCriticalLevel;
+            tab.MaxLevel = 20;
+            tab.Name = "치명타확률";
+            tab.Increase = 1;
+            tab.Price = 5 * tab.NowLevel;
+            tab.Explan = $"{tab.Name}이 {tab.Increase * tab.NowLevel}%만큼 증가";
+            tab.Type = UpgradeType.Gold;
+            tab.ButtonIndex = 2;
+            datas.UpgradeList.Add(tab);
+
+            tab = new UpgradeTabData();
+            tab.NowLevel = Data.Instance.UpgradeData.GoldCriticalDamageLevel;
+            tab.MaxLevel = 500;
+            tab.Name = "치명타 데미지";
+            tab.Increase = 1;
+            tab.Price = 5 * tab.NowLevel;
+            tab.Explan = $"{tab.Name}이 {tab.Increase * tab.NowLevel}%만큼 증가";
+            tab.Type = UpgradeType.Gold;
+            tab.ButtonIndex = 3;
+            datas.UpgradeList.Add(tab);
+
+            tab = new UpgradeTabData();
+            tab.NowLevel = Data.Instance.UpgradeData.GoldWallHpLevel;
+            tab.MaxLevel = 30;
+            tab.Name = "담장 강화";
+            tab.Increase = 10;
+            tab.Price = 5 * tab.NowLevel;
+            tab.Explan = $"담장 체력을 {tab.Increase * tab.NowLevel}만큼 증가시킨다";
+            tab.Type = UpgradeType.Gold;
+            tab.ButtonIndex = 4;
+            datas.UpgradeList.Add(tab);
+
+
+            //관리업그레이드
+            tab = new UpgradeTabData();
+            tab.NowLevel = Data.Instance.UpgradeData.ManagementArcherLevel;
+            tab.MaxLevel = 7;
+            tab.Name = "아처 모집";
+            tab.Increase = 1;
+            tab.Price = 5 * tab.NowLevel;
+            tab.Explan = $"배치 가능한 아처의 수 {tab.Increase * tab.NowLevel}칸 증가";
+            tab.Type = UpgradeType.Management;
+            tab.ButtonIndex = 0;
+            datas.UpgradeList.Add(tab);
+
+            tab = new UpgradeTabData();
+            tab.NowLevel = Data.Instance.UpgradeData.ManagementWallHpLevel;
+            tab.MaxLevel = 30;
+            tab.Name = "담장 강화";
+            tab.Increase = 10;
+            tab.Price = 5 * tab.NowLevel;
+            tab.Explan = $"담장 체력 {tab.Increase * tab.NowLevel} 증가";
+            tab.Type = UpgradeType.Management;
+            tab.ButtonIndex = 1;
+            datas.UpgradeList.Add(tab);
+
+            //공격 업그레이드
+            tab = new UpgradeTabData();
+            tab.NowLevel = Data.Instance.UpgradeData.DiaAttackDamegeLevel;
+            tab.MaxLevel = 500;
+            tab.Name = "기본 공격력";
+            tab.Increase = 5;
+            tab.Price = 5 * tab.NowLevel;
+            tab.Explan = $"{tab.Name} {tab.Increase * tab.NowLevel} 증가";
+            tab.Type = UpgradeType.Attack;
+            tab.ButtonIndex = 0;
+            datas.UpgradeList.Add(tab);
+
+            tab = new UpgradeTabData();
+            tab.NowLevel = Data.Instance.UpgradeData.DiaAttackSpeedLevel;
+            tab.MaxLevel = 20;
+            tab.Name = "공격속도";
+            tab.Increase = 0.05f;
+            tab.Price = 5 * tab.NowLevel;
+            tab.Explan = $"{tab.Name} {tab.Increase * tab.NowLevel} 증가";
+            tab.Type = UpgradeType.Attack;
+            tab.ButtonIndex = 1;
+            datas.UpgradeList.Add(tab);
+
+            tab = new UpgradeTabData();
+            tab.NowLevel = Data.Instance.UpgradeData.DiaCriticalLevel;
+            tab.MaxLevel = 20;
+            tab.Name = "치명타확률";
+            tab.Increase = 0.5f;
+            tab.Price = 5 * tab.NowLevel;
+            tab.Explan = $"{tab.Name} {tab.Increase * tab.NowLevel}% 증가";
+            tab.Type = UpgradeType.Attack;
+            tab.ButtonIndex = 2;
+            datas.UpgradeList.Add(tab);
+
+            tab = new UpgradeTabData();
+            tab.NowLevel = Data.Instance.UpgradeData.DiaCriticalDamageLevel;
+            tab.MaxLevel = 500;
+            tab.Name = "치명타 데미지";
+            tab.Increase = 5;
+            tab.Price = 5 * tab.NowLevel;
+            tab.Explan = $"{tab.Name} {tab.Increase * tab.NowLevel}% 증가";
+            tab.Type = UpgradeType.Attack;
+            tab.ButtonIndex = 3;
+            datas.UpgradeList.Add(tab);
+
+            //제작업그레이드
+            tab = new UpgradeTabData();
+            tab.NowLevel = Data.Instance.UpgradeData.MakingSpeedLevel;
+            tab.MaxLevel = 20;
+            tab.Name = "빠른 제작";
+            tab.Increase = 0.2f;
+            tab.Price = 5 * tab.NowLevel;
+            tab.Explan = $"화살 제작 시간 {tab.Increase * tab.NowLevel}초 감소";
+            tab.Type = UpgradeType.Making;
+            tab.ButtonIndex = 0;
+            datas.UpgradeList.Add(tab);
+
+            tab = new UpgradeTabData();
+            tab.NowLevel = Data.Instance.UpgradeData.MakingArrowLevelLevel;
+            tab.MaxLevel = 150;
+            tab.Name = "제작 화살 레벨 증가";
+            tab.Increase = 1;
+            tab.Price = 5 * tab.NowLevel;
+            tab.Explan = $"제작된 화살의 레벨 {tab.Increase * tab.NowLevel} 증가";
+            tab.Type = UpgradeType.Making;
+            tab.ButtonIndex = 1;
+            datas.UpgradeList.Add(tab);
+
+            tab = new UpgradeTabData();
+            tab.NowLevel = Data.Instance.UpgradeData.DiaMakingArrowLevelLevel;
+            tab.MaxLevel = 80;
+            tab.Name = "제작 화살 레벨 증가";
+            tab.Increase = 1;
+            tab.Price = 5 * tab.NowLevel;
+            tab.Explan = $"제작된 화살의 레벨 {tab.Increase * tab.NowLevel} 증가";
+            tab.Type = UpgradeType.Making;
+            tab.ButtonIndex = 2;
+            datas.UpgradeList.Add(tab);
+
+            tab = new UpgradeTabData();
+            tab.NowLevel = Data.Instance.UpgradeData.MakingAutoSpeedLevel;
+            tab.MaxLevel = 50;
+            tab.Name = "자동 제작";
+            tab.Increase = 0.2f;
+            tab.Price = 5 * tab.NowLevel;
+            tab.Explan = $"(자동)10초에 {tab.Increase * tab.NowLevel}번 화살을 제작";
+            tab.Type = UpgradeType.Making;
+            tab.ButtonIndex = 3;
+            datas.UpgradeList.Add(tab);
+
+            tab = new UpgradeTabData();
+            tab.NowLevel = Data.Instance.UpgradeData.MergeAutoSpeedLevel;
+            tab.MaxLevel = 50;
+            tab.Name = "자동 합성";
+            tab.Increase = 0.2f;
+            tab.Price = 5 * tab.NowLevel;
+            tab.Explan = $"(자동)10초에 {tab.Increase * tab.NowLevel}번 화살을 결합";
+            tab.Type = UpgradeType.Making;
+            tab.ButtonIndex = 4;
+            datas.UpgradeList.Add(tab);
+
+            string Json = JsonUtility.ToJson(datas);
+
+            string path = Application.persistentDataPath + "/UpgradeTabList.json";
+
+            using (StreamWriter outStream = File.CreateText(path))
+            {
+                outStream.Write(Json);
+            }
+
+            Debug.Log(Json);
+        }
+    }
+
     #endregion
 
 
@@ -124,19 +326,28 @@ public class Data : MonoBehaviour
 
     async void ReadUpgradeData()
     {
-        string json;
-        using (StreamReader rd = new StreamReader(Application.persistentDataPath + "/UpgradeLevelData.json"))
+        if (File.Exists(Application.persistentDataPath + "/UpgradeLevelData.json"))
         {
-            json = await rd.ReadToEndAsync();//await is to make work async
-        }                                   //also await is needed to null check
-                                            //without calling false thousand times
-        if (string.IsNullOrEmpty(json) == false)
-        {
-            await Task.Run(() => {
-                _upgradeData = JsonUtility.FromJson<UpgradeData>(json);
+            string json;
+            using (StreamReader rd = new StreamReader(Application.persistentDataPath + "/UpgradeLevelData.json"))
+            {
+                json = await rd.ReadToEndAsync();//await is to make work async
+            }                                   //also await is needed to null check
+                                                //without calling false thousand times
+            if (string.IsNullOrEmpty(json) == false)
+            {
+                await Task.Run(() =>
+                {
+                    _upgradeData = JsonUtility.FromJson<UpgradeData>(json);
 
-                InventoryDataLoad();
-            });            
+                    InventoryDataLoad();
+                });
+            }
+        }
+        else
+        {
+            SaveUpgradeData();
+            InventoryDataLoad();
         }
         
         /*
@@ -165,21 +376,58 @@ public class Data : MonoBehaviour
         */
     }
 
+    async void UpgradeTabData()
+    {
+        //업그레이드 탭 세팅
+
+        if (File.Exists(Application.persistentDataPath + "/UpgradeTabList.json"))
+        {
+            string json = "";
+            using (StreamReader inStream = new StreamReader(Application.persistentDataPath + "/UpgradeTabList.json"))
+            {
+                json = inStream.ReadToEnd();
+            }
+
+            if (string.IsNullOrEmpty(json) == false)
+            {
+                datas = JsonUtility.FromJson<UpgradeTabList>(json);
+            }
+            else Debug.Log("내용이 없습니다.");
+        }
+        else
+        {
+            Debug.Log("파일이 없습니다.");
+            UpgradeTabDataCreate();
+        }
+        //각 창에다가 업그레이드 탭 생성 -> 리스트로 만들어서 제이슨으로 저장후 불러와서 생성하자
+        //이넘으로 업그레이드 타입 만들고 같이 저장했다가, 타입별로 부모 스위치케이스 ㄱㄱ
+        //인덱스를 인자로 받아와서 스위치케이스로 나누기. 함수를 버튼에 델리게이트로 붙이면 인자값에 인덱스를 넣을 수 있을텐데
+    }
+
     async void InventoryDataLoad()
     {
-        string json;
-        using (StreamReader rd = new StreamReader(Application.persistentDataPath + "/ArrowLevelData.json"))
+        if (File.Exists(Application.persistentDataPath + "/ArrowLevelData.json"))
         {
-            json = await rd.ReadToEndAsync();//await is to make work async
-        }                                   //also await is needed to null check
-                                            //without calling false thousand times
-        if (string.IsNullOrEmpty(json) == false)
-        {
-            await Task.Run(() => {
-                _arrowLevelData = JsonUtility.FromJson<ArrowLevelData>(json);
+            string json;
+            using (StreamReader rd = new StreamReader(Application.persistentDataPath + "/ArrowLevelData.json"))
+            {
+                json = await rd.ReadToEndAsync();//await is to make work async
+            }                                   //also await is needed to null check
+                                                //without calling false thousand times
+            if (string.IsNullOrEmpty(json) == false)
+            {
+                await Task.Run(() =>
+                {
+                    _arrowLevelData = JsonUtility.FromJson<ArrowLevelData>(json);
 
-                StartCoroutine(SceneLoad()); // 씬로드 시작
-            });
+                    StartCoroutine(SceneLoad()); // 씬로드 시작
+                });
+            }
+        }
+        else
+        {
+            SaveInventoryData(_arrowLevelData.EquipData, _arrowLevelData.InventoryData);
+            StartCoroutine(SceneLoad());
         }
     }
 
@@ -229,8 +477,8 @@ public class UpgradeData
 [Serializable]
 public class ArrowLevelData
 {
-    public int[] EquipData;
-    public List<int> InventoryData;
+    public int[] EquipData = new int[8] { 1, 0, 0, 0, 0, 0, 0, 0 };
+    public List<int> InventoryData = new List<int>();
     //캐릭터 화살 레벨 데이터. 장착화살 데이터랑 인벤토리에 들고있는거 데이터
 }
 
