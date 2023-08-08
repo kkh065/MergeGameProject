@@ -16,7 +16,8 @@ public class Data : MonoBehaviour
     public ArrowLevelData ArrowLevelData { get { return _arrowLevelData; } set { _arrowLevelData = value; } }
     public UpgradeTabList Datas { get { return datas; } set { datas = value; } }
 
-    public bool IsLoadEnd { private set; get; }
+    public bool IsLoadEnd { set; get; }
+    string Path;
     #endregion
 
     private static Data instance = null;
@@ -54,11 +55,14 @@ public class Data : MonoBehaviour
 
     void Start()
     {
+        IsLoadEnd = false;
+        Path = Application.persistentDataPath;
         _upgradeData = new UpgradeData();
         _arrowLevelData = new ArrowLevelData();
         datas = new UpgradeTabList();
         datas.UpgradeList = new List<UpgradeTabData>();
-        ReadUpgradeData();        
+        ReadUpgradeData();
+        StartCoroutine(SceneLoad());
     }
 
 
@@ -298,17 +302,25 @@ public class Data : MonoBehaviour
 
     #region 로드
 
+    bool _isGo = false;
     AsyncOperation Operation;
     IEnumerator SceneLoad()
     {
+        Debug.Log("is go");
         Operation = SceneManager.LoadSceneAsync("GameScene");
         Operation.allowSceneActivation = false;
 
         while(true)
         {
-            if (Operation.isDone == true)
+            if (_isGo == false) // 제이선 데이터 로딩이 끝날떄까지 대기
             {
-                IsLoadEnd = true;
+                yield return null;
+                continue;
+            }
+            Debug.Log($"in go{Operation.progress}"); 
+            if (Operation.progress >= 0.9f && IsLoadEnd == true) // 씬로드 체크 후, 프로그래스바가 100%가 되면
+            {
+                Operation.allowSceneActivation = true;
                 break;
             }
             yield return null;
@@ -316,20 +328,13 @@ public class Data : MonoBehaviour
         yield return null;
     }
 
-    public void NextScene()
-    {
-        if(Operation != null)
-        {
-            Operation.allowSceneActivation = true;
-        }
-    }
 
     async void ReadUpgradeData()
     {
-        if (File.Exists(Application.persistentDataPath + "/UpgradeLevelData.json"))
+        if (File.Exists(Path + "/UpgradeLevelData.json"))
         {
             string json;
-            using (StreamReader rd = new StreamReader(Application.persistentDataPath + "/UpgradeLevelData.json"))
+            using (StreamReader rd = new StreamReader(Path + "/UpgradeLevelData.json"))
             {
                 json = await rd.ReadToEndAsync();//await is to make work async
             }                                   //also await is needed to null check
@@ -339,7 +344,6 @@ public class Data : MonoBehaviour
                 await Task.Run(() =>
                 {
                     _upgradeData = JsonUtility.FromJson<UpgradeData>(json);
-
                     InventoryDataLoad();
                 });
             }
@@ -378,38 +382,11 @@ public class Data : MonoBehaviour
 
     async void UpgradeTabData()
     {
-        //업그레이드 탭 세팅
-
-        if (File.Exists(Application.persistentDataPath + "/UpgradeTabList.json"))
-        {
-            string json = "";
-            using (StreamReader inStream = new StreamReader(Application.persistentDataPath + "/UpgradeTabList.json"))
-            {
-                json = inStream.ReadToEnd();
-            }
-
-            if (string.IsNullOrEmpty(json) == false)
-            {
-                datas = JsonUtility.FromJson<UpgradeTabList>(json);
-            }
-            else Debug.Log("내용이 없습니다.");
-        }
-        else
-        {
-            Debug.Log("파일이 없습니다.");
-            UpgradeTabDataCreate();
-        }
-        //각 창에다가 업그레이드 탭 생성 -> 리스트로 만들어서 제이슨으로 저장후 불러와서 생성하자
-        //이넘으로 업그레이드 타입 만들고 같이 저장했다가, 타입별로 부모 스위치케이스 ㄱㄱ
-        //인덱스를 인자로 받아와서 스위치케이스로 나누기. 함수를 버튼에 델리게이트로 붙이면 인자값에 인덱스를 넣을 수 있을텐데
-    }
-
-    async void InventoryDataLoad()
-    {
-        if (File.Exists(Application.persistentDataPath + "/ArrowLevelData.json"))
+        //업그레이드 탭 세팅        
+        if (File.Exists(Path + "/UpgradeTabList.json"))
         {
             string json;
-            using (StreamReader rd = new StreamReader(Application.persistentDataPath + "/ArrowLevelData.json"))
+            using (StreamReader rd = new StreamReader(Path + "/ArrowLevelData.json"))
             {
                 json = await rd.ReadToEndAsync();//await is to make work async
             }                                   //also await is needed to null check
@@ -419,15 +396,45 @@ public class Data : MonoBehaviour
                 await Task.Run(() =>
                 {
                     _arrowLevelData = JsonUtility.FromJson<ArrowLevelData>(json);
-
-                    StartCoroutine(SceneLoad()); // 씬로드 시작
+                    _isGo = true;
+                });
+            }
+        }
+        else
+        {
+            UpgradeTabDataCreate();
+        }
+        //각 창에다가 업그레이드 탭 생성 -> 리스트로 만들어서 제이슨으로 저장후 불러와서 생성하자
+        //이넘으로 업그레이드 타입 만들고 같이 저장했다가, 타입별로 부모 스위치케이스 ㄱㄱ
+        //인덱스를 인자로 받아와서 스위치케이스로 나누기. 함수를 버튼에 델리게이트로 붙이면 인자값에 인덱스를 넣을 수 있을텐데
+    }
+    //void Test()
+    //{
+    //    StartCoroutine(SceneLoad()); // 씬로드 시작  
+    //}
+    async void InventoryDataLoad()
+    {
+        if (File.Exists(Path + "/ArrowLevelData.json"))
+        {
+            string json;
+            using (StreamReader rd = new StreamReader(Path + "/ArrowLevelData.json"))
+            {
+                json = await rd.ReadToEndAsync();//await is to make work async
+            }                                   //also await is needed to null check
+                                                //without calling false thousand times
+            if (string.IsNullOrEmpty(json) == false)
+            {
+                await Task.Run(() =>
+                {
+                    _arrowLevelData = JsonUtility.FromJson<ArrowLevelData>(json);
+                    UpgradeTabData();
                 });
             }
         }
         else
         {
             SaveInventoryData(_arrowLevelData.EquipData, _arrowLevelData.InventoryData);
-            StartCoroutine(SceneLoad());
+            UpgradeTabData();
         }
     }
 

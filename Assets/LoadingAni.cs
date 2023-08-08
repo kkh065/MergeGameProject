@@ -24,7 +24,7 @@ public class LoadingAni : MonoBehaviour
         {
             _timeLoading = 100;
             _sliderLoading.value = 1;
-            Data.Instance.NextScene();
+            Data.Instance.IsLoadEnd = true;
         }
         else
         {
