@@ -28,7 +28,7 @@ public class LoadingAni : MonoBehaviour
         }
         else
         {
-            _timeLoading += Time.deltaTime * 30;
+            _timeLoading += Time.deltaTime * 50;
             _sliderLoading.value = _timeLoading / 100;
         }
         _textLoading.text = ((int)_timeLoading).ToString() + "%";

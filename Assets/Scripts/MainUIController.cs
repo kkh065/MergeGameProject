@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,6 +19,8 @@ public class MainUIController : MonoBehaviour
 
     private void Awake()
     {
+        _equipArrowData = Data.Instance.ArrowLevelData.EquipData;
+        _inventoryData = Data.Instance.ArrowLevelData.InventoryData;
         MergeInventoryToggleIsON();
     }
 
@@ -68,7 +69,7 @@ public class MainUIController : MonoBehaviour
         //자동저장
         if (_autoSaveTimer > 600)
         {
-            Data.Instance.SaveInventoryData(_equipArrowData, _inventoryData);
+            Data.Instance.SaveInventoryData();
             _autoSaveTimer = 0;
         }
         
@@ -194,11 +195,6 @@ public class MainUIController : MonoBehaviour
     void InitializedUpgradeTab()
     {
         //업그레이드 탭 세팅
-        UpgradeTabInitToType();
-    }
-
-    void UpgradeTabInitToType()
-    {
         GameObject tabGo = new GameObject();
 
         foreach (var data in Data.Instance.Datas.UpgradeList)
@@ -241,7 +237,7 @@ public class MainUIController : MonoBehaviour
 
     void UpgradeTabUpdate()
     {
-        //아니면 해당 업그레이드가 눌렸을경우 그 탭을 어딘지 찾아서 그 탭만 업데이트 
+        //해당 업그레이드가 눌렸을경우 그 탭을 어딘지 찾아서 그 탭만 업데이트
     }
 
     void GoldUpgradeOpen()
@@ -281,7 +277,7 @@ public class MainUIController : MonoBehaviour
     [SerializeField] Transform _inventorySlot;
     [SerializeField] Transform _equipSlot;
     int[] _equipArrowData;
-    List<int> _inventoryData = new List<int>();
+    List<int> _inventoryData;
     float _autoMergeTimer = 0;
     float _autoMakingTimer = 0;
     float _autoSaveTimer = 0;
@@ -289,21 +285,28 @@ public class MainUIController : MonoBehaviour
     void MergeInventoryOpen()
     {
         _mergeInventory.SetActive(true);
+        InitEquipSlot();
     }
 
     void InitEquipSlot()
     {
-        _equipArrowData = new int[Data.Instance.UpgradeData.ManagementArcherLevel + 1];
         for (int i = 0; i < _equipSlot.childCount; i++)
         {
-            _equipSlot.GetChild(i).gameObject.SetActive(i < Data.Instance.UpgradeData.ManagementArcherLevel + 1);
+            _equipSlot.GetChild(i).gameObject.SetActive(false);
         }
+
+        UpdateEquip();
     }
 
     //장비창
     void UpdateEquip()
     {
         //장비창 갱신 - 세이브데이터에다가 인벤토리 데이터랑 장비창 데이터 저장하는것 만들기
+        for (int i = 0; i < 1 + Data.Instance.UpgradeData.ManagementArcherLevel; i++)
+        {
+            _equipSlot.GetChild(i).gameObject.SetActive(true);
+            _equipSlot.GetChild(i).GetComponent<InventorySlot>().Init(Data.Instance.ArrowLevelData.EquipData[i]);
+        }
     }
 
 
@@ -318,7 +321,6 @@ public class MainUIController : MonoBehaviour
 
     void UpdateInventory()
     {
-        //인벤토리 데이터를 누군가가 리스트로 들고있긴 해야겠네.
         for(int i = 0; i < _inventoryData.Count; i++)
         {
             _inventorySlot.GetChild(i).GetComponent<InventorySlot>().Init(_inventoryData[i]);

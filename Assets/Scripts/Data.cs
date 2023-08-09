@@ -18,6 +18,10 @@ public class Data : MonoBehaviour
 
     public bool IsLoadEnd { set; get; }
     string Path;
+
+    bool _isGo = false;
+    AsyncOperation Operation;
+
     #endregion
 
     private static Data instance = null;
@@ -66,35 +70,27 @@ public class Data : MonoBehaviour
     }
 
 
-    void Update()
-    {
-
-    }
-
     #region 세이브
     void SaveUpgradeData()
     {
         //업그레이드 데이터를 제이슨파일로 저장
         string Json = JsonUtility.ToJson(_upgradeData);
 
-        string path = Application.persistentDataPath + "/UpgradeLevelData.json";
+        string TempPath = Path + "/UpgradeLevelData.json";
 
-        using (StreamWriter outStream = File.CreateText(path))
+        using (StreamWriter outStream = File.CreateText(TempPath))
         {
             outStream.Write(Json);
         }
     }
 
-    public void SaveInventoryData(int[] ints, List<int> inventory)
+    public void SaveInventoryData()
     {
-        _arrowLevelData.EquipData = ints;
-        _arrowLevelData.InventoryData = inventory;
-
         string Json = JsonUtility.ToJson(_arrowLevelData);
 
-        string path = Application.persistentDataPath + "/ArrowLevelData.json";
+        string TempPath = Path + "/ArrowLevelData.json";
 
-        using (StreamWriter outStream = File.CreateText(path))
+        using (StreamWriter outStream = File.CreateText(TempPath))
         {
             outStream.Write(Json);
         }
@@ -286,9 +282,9 @@ public class Data : MonoBehaviour
 
             string Json = JsonUtility.ToJson(datas);
 
-            string path = Application.persistentDataPath + "/UpgradeTabList.json";
+            string TempPath = Path + "/UpgradeTabList.json";
 
-            using (StreamWriter outStream = File.CreateText(path))
+            using (StreamWriter outStream = File.CreateText(TempPath))
             {
                 outStream.Write(Json);
             }
@@ -302,11 +298,9 @@ public class Data : MonoBehaviour
 
     #region 로드
 
-    bool _isGo = false;
-    AsyncOperation Operation;
+    
     IEnumerator SceneLoad()
     {
-        Debug.Log("is go");
         Operation = SceneManager.LoadSceneAsync("GameScene");
         Operation.allowSceneActivation = false;
 
@@ -317,7 +311,6 @@ public class Data : MonoBehaviour
                 yield return null;
                 continue;
             }
-            Debug.Log($"in go{Operation.progress}"); 
             if (Operation.progress >= 0.9f && IsLoadEnd == true) // 씬로드 체크 후, 프로그래스바가 100%가 되면
             {
                 Operation.allowSceneActivation = true;
@@ -380,48 +373,16 @@ public class Data : MonoBehaviour
         */
     }
 
-    async void UpgradeTabData()
-    {
-        //업그레이드 탭 세팅        
-        if (File.Exists(Path + "/UpgradeTabList.json"))
-        {
-            string json;
-            using (StreamReader rd = new StreamReader(Path + "/ArrowLevelData.json"))
-            {
-                json = await rd.ReadToEndAsync();//await is to make work async
-            }                                   //also await is needed to null check
-                                                //without calling false thousand times
-            if (string.IsNullOrEmpty(json) == false)
-            {
-                await Task.Run(() =>
-                {
-                    _arrowLevelData = JsonUtility.FromJson<ArrowLevelData>(json);
-                    _isGo = true;
-                });
-            }
-        }
-        else
-        {
-            UpgradeTabDataCreate();
-        }
-        //각 창에다가 업그레이드 탭 생성 -> 리스트로 만들어서 제이슨으로 저장후 불러와서 생성하자
-        //이넘으로 업그레이드 타입 만들고 같이 저장했다가, 타입별로 부모 스위치케이스 ㄱㄱ
-        //인덱스를 인자로 받아와서 스위치케이스로 나누기. 함수를 버튼에 델리게이트로 붙이면 인자값에 인덱스를 넣을 수 있을텐데
-    }
-    //void Test()
-    //{
-    //    StartCoroutine(SceneLoad()); // 씬로드 시작  
-    //}
     async void InventoryDataLoad()
     {
         if (File.Exists(Path + "/ArrowLevelData.json"))
         {
+            
             string json;
             using (StreamReader rd = new StreamReader(Path + "/ArrowLevelData.json"))
             {
-                json = await rd.ReadToEndAsync();//await is to make work async
-            }                                   //also await is needed to null check
-                                                //without calling false thousand times
+                json = await rd.ReadToEndAsync();
+            }
             if (string.IsNullOrEmpty(json) == false)
             {
                 await Task.Run(() =>
@@ -433,9 +394,39 @@ public class Data : MonoBehaviour
         }
         else
         {
-            SaveInventoryData(_arrowLevelData.EquipData, _arrowLevelData.InventoryData);
+            SaveInventoryData();
             UpgradeTabData();
         }
+    }
+
+    async void UpgradeTabData()
+    {
+        //업그레이드 탭 세팅        
+        if (File.Exists(Path + "/UpgradeTabList.json"))
+        {
+            string json;
+            using (StreamReader rd = new StreamReader(Path + "/UpgradeTabList.json"))
+            {
+                json = await rd.ReadToEndAsync();//await is to make work async
+            }                                   //also await is needed to null check
+                                                //without calling false thousand times
+            if (string.IsNullOrEmpty(json) == false)
+            {
+                await Task.Run(() =>
+                {
+                    datas = JsonUtility.FromJson<UpgradeTabList>(json);
+                    _isGo = true;
+                });
+            }
+        }
+        else
+        {
+            UpgradeTabDataCreate();
+            _isGo = true;
+        }
+        //각 창에다가 업그레이드 탭 생성 -> 리스트로 만들어서 제이슨으로 저장후 불러와서 생성하자
+        //이넘으로 업그레이드 타입 만들고 같이 저장했다가, 타입별로 부모 스위치케이스 ㄱㄱ
+        //인덱스를 인자로 받아와서 스위치케이스로 나누기. 함수를 버튼에 델리게이트로 붙이면 인자값에 인덱스를 넣을 수 있을텐데
     }
 
     #endregion
