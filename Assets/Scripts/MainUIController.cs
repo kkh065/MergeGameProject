@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class MainUIController : MonoBehaviour
 {
@@ -72,7 +72,20 @@ public class MainUIController : MonoBehaviour
             Data.Instance.SaveInventoryData();
             _autoSaveTimer = 0;
         }
-        
+
+        //수동제작
+        if(_makingCooltime > 0)
+        {
+            _makingCooltime -= Time.deltaTime;
+            _imageMakingCooltime.fillAmount = _makingCooltime / 10f;
+        }
+
+        //수동합성
+        if (_mergeCooltime > 0)
+        {
+            _mergeCooltime -= Time.deltaTime;
+            _imageMergeCooltime.fillAmount = _mergeCooltime;
+        }
     }
 
     #region 토글제어
@@ -276,11 +289,15 @@ public class MainUIController : MonoBehaviour
 
     [SerializeField] Transform _inventorySlot;
     [SerializeField] Transform _equipSlot;
+    [SerializeField] Image _imageMakingCooltime;
+    [SerializeField] Image _imageMergeCooltime;
     int[] _equipArrowData;
     List<int> _inventoryData;
     float _autoMergeTimer = 0;
     float _autoMakingTimer = 0;
     float _autoSaveTimer = 0;
+    float _makingCooltime = 0;
+    float _mergeCooltime = 0;
 
     void MergeInventoryOpen()
     {
@@ -305,10 +322,9 @@ public class MainUIController : MonoBehaviour
         for (int i = 0; i < 1 + Data.Instance.UpgradeData.ManagementArcherLevel; i++)
         {
             _equipSlot.GetChild(i).gameObject.SetActive(true);
-            _equipSlot.GetChild(i).GetComponent<InventorySlot>().Init(Data.Instance.ArrowLevelData.EquipData[i]);
+            _equipSlot.GetChild(i).GetComponent<InventorySlot>().Init(_equipArrowData[i]);
         }
     }
-
 
     //인벤토리
     void InventorySlotAllClose()
@@ -327,19 +343,64 @@ public class MainUIController : MonoBehaviour
         }
     }
 
-    public void MakingArrow()
+    void MakingArrow()
     {
-        //제작 쿨타임 만들어야함. 쿨타임만들기.
         if (_inventoryData.Count < 40)
         {
             _inventoryData.Add(GameManager.Instance.GetMakingArrowLevel());
-            _inventorySlot.GetChild(_inventoryData.Count - 1).GetComponent<InventorySlot>().Init(_inventoryData[_inventoryData.Count - 1]);
+            //_inventorySlot.GetChild(_inventoryData.Count - 1).GetComponent<InventorySlot>().Init(_inventoryData[_inventoryData.Count - 1]);
+            InventorySlotAllClose();
+            UpdateInventory();
         }
     }
 
-    public void MergeArrow()
+    public void OnclickMakingArrow()
     {
-        //화살 조합 어떻게 구현할 지 고민해보기.
+        if(_makingCooltime <= 0)
+        {
+            MakingArrow();
+            _makingCooltime = 10;
+        }
+    }
+
+    public void OnClickMergeArrow()
+    {
+        if (_mergeCooltime <= 0)
+        {
+            MergeArrow();
+            _mergeCooltime = 1;
+        }
+    }
+
+    void MergeArrow()
+    {
+        for (int i = 0; i < _inventoryData.Count; i++)
+        {
+            for (int j = 0; j < _inventoryData.Count; j++)
+            {
+                if (i != j)
+                {
+                    if (_inventoryData[i] == _inventoryData[j])
+                    {
+                        _inventoryData[i]++;
+                        _inventoryData.RemoveAt(j);
+                        InventorySlotAllClose();
+                        UpdateInventory();
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    public void OnClickSort()
+    {
+        var datas = from data in _inventoryData
+                    orderby data descending
+                    select data;
+        _inventoryData = datas.ToList();
+        InventorySlotAllClose();
+        UpdateInventory();
     }
 
    
