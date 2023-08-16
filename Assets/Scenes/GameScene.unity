@@ -716,7 +716,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 99999999
+  m_Text: 0
 --- !u!222 &88436558
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8199,7 +8199,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 99999999
+  m_Text: 0
 --- !u!222 &871708519
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10602,7 +10602,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 99999999
+  m_Text: 0
 --- !u!222 &1167932329
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -12553,6 +12553,7 @@ GameObject:
   - component: {fileID: 1437757536}
   - component: {fileID: 1437757538}
   - component: {fileID: 1437757537}
+  - component: {fileID: 1437757539}
   m_Layer: 5
   m_Name: Currency
   m_TagString: Untagged
@@ -12621,6 +12622,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1437757535}
   m_CullTransparentMesh: 1
+--- !u!114 &1437757539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1437757535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ac3ffa4d77ff0544a92f908dc730cf1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _goldText: {fileID: 88436557}
+  _diaText: {fileID: 871708518}
+  _reincarnationText: {fileID: 1167932328}
 --- !u!1 &1460017950
 GameObject:
   m_ObjectHideFlags: 0
@@ -17986,7 +18002,7 @@ GameObject:
   - component: {fileID: 2107363975}
   - component: {fileID: 2107363974}
   m_Layer: 5
-  m_Name: Rebirth
+  m_Name: Reincarnation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

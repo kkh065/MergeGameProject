@@ -3,6 +3,43 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    MainUIController _mainUI;
+    CurrencyContoroller _currencyUI;
+    int _gold = 0;
+    public int Gold
+    {
+        get { return _gold; }
+        set 
+        {
+            _gold = value;
+            _currencyUI.UpdateGold();
+        }
+    }
+
+    int _dia = 0;
+    public int Dia
+    {
+        get { return _dia; }
+        set 
+        {
+            _dia = value;
+            _currencyUI.UpdateDia();
+        }
+    }
+
+    int _reincarnation = 0;
+    public int Reincarnation
+    {
+        get { return _reincarnation; }
+        set 
+        {
+            _reincarnation = value;
+            _currencyUI.UpdateReincarnation();
+        }
+    }
+
+    
+
     private static GameManager instance = null;
 
     public static GameManager Instance
@@ -37,12 +74,39 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-
+        _mainUI = GameObject.Find("MainUI").GetComponent<MainUIController>();
+        _currencyUI = GameObject.Find("Currency").GetComponent<CurrencyContoroller>();
+        InitCurrency();
     }
 
     void Update()
     {
 
+    }
+
+    void InitCurrency()
+    {
+        if(PlayerPrefs.HasKey("Gold"))
+        {
+            _gold = PlayerPrefs.GetInt("Gold");
+        }
+
+        if (PlayerPrefs.HasKey("Dia"))
+        {
+            _dia = PlayerPrefs.GetInt("Dia");
+        }
+
+        if (PlayerPrefs.HasKey("Reincarnation"))
+        {
+            _reincarnation = PlayerPrefs.GetInt("Reincarnation");
+        }
+    }
+
+    public void SaveCurrency()
+    {
+        PlayerPrefs.SetInt("Gold", _gold);
+        PlayerPrefs.SetInt("Dia", _dia);
+        PlayerPrefs.SetInt("Reincarnation", _reincarnation);
     }
 
     public int GetMakingArrowLevel() //제작화살레벨 업그레이드 추가시 여기 수정해야함

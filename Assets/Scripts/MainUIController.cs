@@ -70,6 +70,7 @@ public class MainUIController : MonoBehaviour
         if (_autoSaveTimer > 600)
         {
             Data.Instance.SaveInventoryData();
+            GameManager.Instance.SaveCurrency();
             _autoSaveTimer = 0;
         }
 
