@@ -111,7 +111,7 @@ public class GameManager : MonoBehaviour
 
     public int GetMakingArrowLevel() //제작화살레벨 업그레이드 추가시 여기 수정해야함
     {
-        return 1 + Data.Instance.UpgradeData.MakingArrowLevelLevel + Data.Instance.UpgradeData.DiaMakingArrowLevelLevel;
+        return 1;
     }
 
     public int GetMaxArrowLevel()

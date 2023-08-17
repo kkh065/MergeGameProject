@@ -11,14 +11,15 @@ public class UpgradeTab : MonoBehaviour
     [SerializeField] Text _textPrice;
     [SerializeField] Button _upgradeButton;
     [SerializeField] Image _imageIcon;
-    public void Init(UpgradeTabData tabData, Action<UpgradeType, int> ButtonAction)
+    public void Init(UpgradeData Data, Action<UpgradeType, int> ButtonAction)
     {
-        _nowLevel.text = $"LV.{tabData.NowLevel}";
-        _upgradeName.text = $"{tabData.Name}(MAX {tabData.MaxLevel})";
-        _textInfo.text = tabData.Explan;
-        _upgradeValue.text = $"+ {tabData.Increase}";
-        _textPrice.text = (tabData.Price * tabData.NowLevel).ToString();
-        _upgradeButton.onClick.AddListener(() => ButtonAction(tabData.Type, tabData.ButtonIndex));
-        _imageIcon.sprite = Resources.Load<Sprite>("UpgradeIcon/Icon" + (int)tabData.Type + tabData.ButtonIndex);
+        _nowLevel.text = $"LV.{Data.Level}";
+        _upgradeName.text = $"{Data.Name}(MAX {Data.MaxLevel})";
+        _textInfo.text = Data.Explan;
+        _upgradeValue.text = $"+ {Data.Increase}";
+        _textPrice.text = (Data.Price * Data.Level).ToString();
+        _upgradeButton.onClick.AddListener(() => ButtonAction(Data.UpgradeType, Data.ButtonIndex));
+        _imageIcon.sprite = Resources.Load<Sprite>("UpgradeIcon/Icon" + (int)Data.UpgradeType + Data.ButtonIndex);
+        //값의 타입에 따라서 리소스 모양 바꿔줘야함
     }
 }

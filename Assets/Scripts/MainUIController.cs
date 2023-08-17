@@ -211,9 +211,9 @@ public class MainUIController : MonoBehaviour
         //업그레이드 탭 세팅
         GameObject tabGo = new GameObject();
 
-        foreach (var data in Data.Instance.Datas.UpgradeList)
+        foreach (var data in Data.Instance.UpgradeDatas.upgradeDataList)
         {
-            switch (data.Type)
+            switch (data.UpgradeType)
             {
                 case UpgradeType.Gold:
                     tabGo = Instantiate(_upgradeTab, _goldUpgradeContent.transform);
@@ -239,6 +239,15 @@ public class MainUIController : MonoBehaviour
         switch (type)
         {
             case UpgradeType.Gold:
+                switch(idx)
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                }
                 break;
             case UpgradeType.Management:
                 break;
@@ -319,8 +328,9 @@ public class MainUIController : MonoBehaviour
     //장비창
     void UpdateEquip()
     {
+        //업그레이드 데이터 받아와서 수정 필요
         //장비창 갱신 - 세이브데이터에다가 인벤토리 데이터랑 장비창 데이터 저장하는것 만들기
-        for (int i = 0; i < 1 + Data.Instance.UpgradeData.ManagementArcherLevel; i++)
+        for (int i = 0; i < 1; i++)
         {
             _equipSlot.GetChild(i).gameObject.SetActive(true);
             _equipSlot.GetChild(i).GetComponent<InventorySlot>().Init(_equipArrowData[i]);
@@ -442,28 +452,5 @@ public class MainUIController : MonoBehaviour
 
     #endregion
 }
-[Serializable]
-public class UpgradeTabList
-{
-    public List<UpgradeTabData> UpgradeList;
-}
-[Serializable]
-public class UpgradeTabData
-{
-    public int NowLevel = 0;
-    public int MaxLevel = 0;
-    public float Increase = 0;
-    public string Name = "";
-    public string Explan = "";
-    public int Price = 0;
-    public UpgradeType Type;
-    public int ButtonIndex = 0;
-}
-[Serializable]
-public enum UpgradeType
-{
-    Gold,
-    Management,
-    Attack,
-    Making,
-}
+
+
