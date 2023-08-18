@@ -68,7 +68,7 @@ public class Data : MonoBehaviour
 
 
     #region 세이브
-    void SaveUpgradeData()
+    public void SaveUpgradeData()
     {
         //업그레이드 데이터를 제이슨파일로 저장
         string Json = JsonUtility.ToJson(UpgradeDatas);
@@ -351,6 +351,12 @@ public class Data : MonoBehaviour
                 await Task.Run(() =>
                 {
                     UpgradeDatas = JsonUtility.FromJson<UpgradeDataList>(json);
+                    if(UpgradeDatas.upgradeDataList.Count <= 0)
+                    {
+                        UpgradeDataCreate();
+                        SaveUpgradeData();
+                    }
+                    Debug.Log(UpgradeDatas.upgradeDataList.Count);
                     InventoryDataLoad();
                 });
             }
@@ -415,7 +421,7 @@ public class Data : MonoBehaviour
 
     #endregion;
 
-    UpgradeData GetUpgradeData(UpgradeType type, int ButtonIdx)
+    public UpgradeData GetUpgradeData(UpgradeType type, int ButtonIdx)
     {
         for(int i = 0; i < UpgradeDatas.upgradeDataList.Count; i++)
         {

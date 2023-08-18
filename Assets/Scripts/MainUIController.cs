@@ -43,16 +43,11 @@ public class MainUIController : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetMouseButtonDown(0))
-        {
-            //UpgradeTabDataCreate();
-        }
-
-
         //자동제작
         _autoMakingTimer += Time.deltaTime;
         if(_autoMakingTimer > 10)
         {
+            Debug.Log("자동제작!");
             MakingArrow();
             _autoMakingTimer = 0;
         }
@@ -61,6 +56,7 @@ public class MainUIController : MonoBehaviour
         _autoMergeTimer += Time.deltaTime;
         if (_autoMergeTimer > 10)
         {
+            Debug.Log("자동합성!");
             MergeArrow();
             _autoMergeTimer = 0;
         }
@@ -69,19 +65,20 @@ public class MainUIController : MonoBehaviour
         //자동저장
         if (_autoSaveTimer > 600)
         {
+            Debug.Log("자동저장!");
             Data.Instance.SaveInventoryData();
             GameManager.Instance.SaveCurrency();
             _autoSaveTimer = 0;
         }
 
-        //수동제작
+        //수동제작 쿨타임
         if(_makingCooltime > 0)
         {
             _makingCooltime -= Time.deltaTime;
             _imageMakingCooltime.fillAmount = _makingCooltime / 10f;
         }
 
-        //수동합성
+        //수동합성 쿨타임
         if (_mergeCooltime > 0)
         {
             _mergeCooltime -= Time.deltaTime;
@@ -206,6 +203,7 @@ public class MainUIController : MonoBehaviour
         _specialUpgrade.SetActive(false);
     }
 
+    Dictionary<UpgradeData, GameObject> UpgradeTabList = new Dictionary<UpgradeData, GameObject>();
     void InitializedUpgradeTab()
     {
         //업그레이드 탭 세팅
@@ -229,38 +227,124 @@ public class MainUIController : MonoBehaviour
                     break;
             }
             tabGo?.GetComponent<UpgradeTab>().Init(data, TabUpgradeButton);
-            //게임오브젝트 네임을 바꿔놓을까? 나중에 업데이트할때 찾기 쉽게?
+            UpgradeTabList.Add(data, tabGo);
         }
     }
 
     void TabUpgradeButton(UpgradeType type, int idx)
     {
-        //골드탭 업그레이드 버튼 눌렸을때 기능구현
-        switch (type)
+        UpgradeData ud = Data.Instance.GetUpgradeData(type, idx);
+        if(ud.Level < ud.MaxLevel)
+        {
+            switch(ud.priceType)
+            {
+                case PriceType.Gold:
+                    if (GameManager.Instance.Gold >= ud.Price)
+                    {
+                        GameManager.Instance.Gold -= ud.Price;
+                        RefreshData(ud);
+                    }
+                    break;
+                case PriceType.Dia:
+                    if (GameManager.Instance.Dia >= ud.Price)
+                    {
+                        GameManager.Instance.Dia -= ud.Price;
+                        RefreshData(ud);
+                    }
+                    break;
+                case PriceType.Reincarnation:
+                    if (GameManager.Instance.Reincarnation >= ud.Price)
+                    {
+                        GameManager.Instance.Reincarnation -= ud.Price;
+                        RefreshData(ud);
+                    }
+                    break;
+            }
+        }
+    }
+
+    void RefreshData(UpgradeData data)
+    {
+        data.Level++;
+        GameManager.Instance.SaveCurrency();
+        Data.Instance.SaveUpgradeData();
+        UpdateGameData(data);
+        UpgradeTabList[data].GetComponent<UpgradeTab>().UpdateTabData(data);
+    }
+
+    void UpdateGameData(UpgradeData data)
+    {
+        switch(data.UpgradeType)
         {
             case UpgradeType.Gold:
-                switch(idx)
+                switch (data.ButtonIndex)
                 {
                     case 0:
+                        //공격력 증가
                         break;
                     case 1:
+                        //공격속도 증가
                         break;
                     case 2:
+                        //치명타 확률
+                        break;
+                    case 3:
+                        //치명타 배율
+                        break;
+                    case 4:
+                        //담장 체력 증가
                         break;
                 }
                 break;
             case UpgradeType.Management:
+                switch (data.ButtonIndex)
+                {
+                    case 0:
+                        //캐릭터 수 증가
+                        break;
+                    case 1:
+                        //담장체력 증가
+                        break;
+                }
                 break;
             case UpgradeType.Attack:
+                switch (data.ButtonIndex)
+                {
+                    case 0:
+                        //공격력
+                        break;
+                    case 1:
+                        //공격속도
+                        break;
+                    case 2:
+                        //치명타 확률
+                        break;
+                    case 3:
+                        //치명타 배율
+                        break;
+                }
                 break;
             case UpgradeType.Making:
+                switch (data.ButtonIndex)
+                {
+                    case 0:
+                        //수동화살제작 쿨타임 감소
+                        break;
+                    case 1:
+                        //제작화살레벨 증가
+                        break;
+                    case 2:
+                        //제작화살레벨 증가
+                        break;
+                    case 3:
+                        //자동제작 시간
+                        break;
+                    case 4:
+                        //자동합성 시간
+                        break;
+                }
                 break;
         }
-    }
-
-    void UpgradeTabUpdate()
-    {
-        //해당 업그레이드가 눌렸을경우 그 탭을 어딘지 찾아서 그 탭만 업데이트
     }
 
     void GoldUpgradeOpen()

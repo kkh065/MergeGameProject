@@ -14,4 +14,10 @@ public class MenuListController : MonoBehaviour
     {
         MenuList.SetActive(false);
     }
+
+    public void Save()
+    {
+        Data.Instance.SaveInventoryData();
+        GameManager.Instance.SaveCurrency();
+    }
 }
