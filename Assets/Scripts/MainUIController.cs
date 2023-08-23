@@ -19,8 +19,7 @@ public class MainUIController : MonoBehaviour
 
     private void Awake()
     {
-        _equipArrowData = Data.Instance.ArrowLevelData.EquipData;
-        _inventoryData = Data.Instance.ArrowLevelData.InventoryData;
+        
         MergeInventoryToggleIsON();
     }
 
@@ -36,8 +35,7 @@ public class MainUIController : MonoBehaviour
 
         //인벤토리 관련 초기화
         InventorySlotAllClose();
-        //InitEquipSlot();
-        //인벤토리 데이터를 세이브파일에서 읽어오는 작업 해야함
+        InitEquipSlot();
         UpdateInventory(); // 인벤토리 데이터에 따라서 인벤토리창을 업데이트
     }
 
@@ -385,8 +383,7 @@ public class MainUIController : MonoBehaviour
     [SerializeField] Transform _equipSlot;
     [SerializeField] Image _imageMakingCooltime;
     [SerializeField] Image _imageMergeCooltime;
-    int[] _equipArrowData;
-    List<int> _inventoryData;
+    
     float _autoMergeTimer = 0;
     float _autoMakingTimer = 0;
     float _autoSaveTimer = 0;
@@ -396,7 +393,6 @@ public class MainUIController : MonoBehaviour
     void MergeInventoryOpen()
     {
         _mergeInventory.SetActive(true);
-        InitEquipSlot();
     }
 
     void InitEquipSlot()
@@ -414,10 +410,13 @@ public class MainUIController : MonoBehaviour
     {
         //업그레이드 데이터 받아와서 수정 필요
         //장비창 갱신 - 세이브데이터에다가 인벤토리 데이터랑 장비창 데이터 저장하는것 만들기
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < GameManager.Instance.EquipArrowData.Length; i++)
         {
-            _equipSlot.GetChild(i).gameObject.SetActive(true);
-            _equipSlot.GetChild(i).GetComponent<InventorySlot>().Init(_equipArrowData[i]);
+            if (GameManager.Instance.EquipArrowData[i] > 0)
+            {
+                _equipSlot.GetChild(i).gameObject.SetActive(true);
+                _equipSlot.GetChild(i).GetComponent<EquipSlot>().Init(GameManager.Instance.EquipArrowData[i], i);
+            }
         }
     }
 
@@ -432,17 +431,17 @@ public class MainUIController : MonoBehaviour
 
     void UpdateInventory()
     {
-        for(int i = 0; i < _inventoryData.Count; i++)
+        for(int i = 0; i < GameManager.Instance.InventoryData.Count; i++)
         {
-            _inventorySlot.GetChild(i).GetComponent<InventorySlot>().Init(_inventoryData[i]);
+            _inventorySlot.GetChild(i).GetComponent<InventorySlot>().Init(GameManager.Instance.InventoryData[i], i);
         }
     }
 
     void MakingArrow()
     {
-        if (_inventoryData.Count < 40)
+        if (GameManager.Instance.InventoryData.Count < 40)
         {
-            _inventoryData.Add(GameManager.Instance.GetMakingArrowLevel());
+            GameManager.Instance.InventoryData.Add(GameManager.Instance.GetMakingArrowLevel());
             //_inventorySlot.GetChild(_inventoryData.Count - 1).GetComponent<InventorySlot>().Init(_inventoryData[_inventoryData.Count - 1]);
             InventorySlotAllClose();
             UpdateInventory();
@@ -469,16 +468,16 @@ public class MainUIController : MonoBehaviour
 
     void MergeArrow()
     {
-        for (int i = 0; i < _inventoryData.Count; i++)
+        for (int i = 0; i < GameManager.Instance.InventoryData.Count; i++)
         {
-            for (int j = 0; j < _inventoryData.Count; j++)
+            for (int j = 0; j < GameManager.Instance.InventoryData.Count; j++)
             {
                 if (i != j)
                 {
-                    if (_inventoryData[i] == _inventoryData[j])
+                    if (GameManager.Instance.InventoryData[i] == GameManager.Instance.InventoryData[j])
                     {
-                        _inventoryData[i]++;
-                        _inventoryData.RemoveAt(j);
+                        GameManager.Instance.InventoryData[i]++;
+                        GameManager.Instance.InventoryData.RemoveAt(j);
                         InventorySlotAllClose();
                         UpdateInventory();
                         return;
@@ -490,10 +489,10 @@ public class MainUIController : MonoBehaviour
 
     public void OnClickSort()
     {
-        var datas = from data in _inventoryData
+        var datas = from data in GameManager.Instance.InventoryData
                     orderby data descending
                     select data;
-        _inventoryData = datas.ToList();
+        GameManager.Instance.InventoryData = datas.ToList();
         InventorySlotAllClose();
         UpdateInventory();
     }
