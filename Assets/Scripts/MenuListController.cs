@@ -18,6 +18,6 @@ public class MenuListController : MonoBehaviour
     public void Save()
     {
         Data.Instance.SaveInventoryData();
-        GameManager.Instance.SaveCurrency();
+        GameManager.Instance.SaveGameData();
     }
 }

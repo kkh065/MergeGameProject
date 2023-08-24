@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Threading;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Pool;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -40,10 +42,24 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    int _stage = 0;
+    public int Stage { get { return _stage; } set { _stage = value; } }
+    int _wallHp = 0;
+    public int WallHP { get { return _wallHp; } set { _wallHp = value; } }
+    int _wallMaxHp = 0;
+    public int WallMaxHP { get { return _wallHp; } set { _wallHp = value; } }
+
     public int[] EquipArrowData;
     public List<int> InventoryData;
 
+    //몬스터 관련 변수
+    List<Monster> _liveMonsterList = new List<Monster>();
+    public IObjectPool<Monster> _monsterPool;
 
+    [SerializeField] GameObject[] _monsterPrefabs;
+    [SerializeField] int _maxPoolSize;
+    GameObject _monsterSpawnPoint;
+    GameObject _wall;
 
     private static GameManager instance = null;
 
@@ -78,13 +94,16 @@ public class GameManager : MonoBehaviour
 
         EquipArrowData = Data.Instance.ArrowLevelData.EquipData;
         InventoryData = Data.Instance.ArrowLevelData.InventoryData;
+        _monsterSpawnPoint = GameObject.Find("MonsterSpawnPoint");
+        _monsterPool = new ObjectPool<Monster>(CreateMonster, GetMonster, ReleaseMonster, DestroyMonster, maxSize: _maxPoolSize);
+        _wall = GameObject.Find("Wall");
     }
 
     void Start()
     {
         _mainUI = GameObject.Find("MainUI").GetComponent<MainUIController>();
         _currencyUI = GameObject.Find("Currency").GetComponent<CurrencyContoroller>();
-        InitCurrency();
+        InitGamaData();
     }
 
     void Update()
@@ -92,8 +111,9 @@ public class GameManager : MonoBehaviour
 
     }
 
-    void InitCurrency()
+    void InitGamaData()
     {
+        //재화데이터
         if(PlayerPrefs.HasKey("Gold"))
         {
             _gold = PlayerPrefs.GetInt("Gold");
@@ -108,14 +128,45 @@ public class GameManager : MonoBehaviour
         {
             _reincarnation = PlayerPrefs.GetInt("Reincarnation");
         }
-    }
 
-    public void SaveCurrency()
+
+        //벽데이터
+        if (PlayerPrefs.HasKey("WallMaxHp"))
+        {
+            _wallMaxHp = PlayerPrefs.GetInt("WallMaxHp");
+        }
+        else
+        {
+            _wallMaxHp = 100;
+        }
+        _wallHp = _wallMaxHp;
+
+        //
+
+        if (PlayerPrefs.HasKey("Stage"))
+        {
+            _stage = PlayerPrefs.GetInt("Stage");
+        }
+        else
+        {
+            _stage = 1;
+        }
+
+        //게임 로드
+    }
+    public void SaveGameData()
     {
         PlayerPrefs.SetInt("Gold", _gold);
         PlayerPrefs.SetInt("Dia", _dia);
         PlayerPrefs.SetInt("Reincarnation", _reincarnation);
+
+        PlayerPrefs.SetInt("WallMaxHp", _wallMaxHp);
+        PlayerPrefs.SetInt("Stage", _stage);
     }
+
+    public Vector2 GetWallPos() => _wall.transform.position;
+
+    
 
     public int GetMakingArrowLevel() //제작화살레벨 업그레이드 추가시 여기 수정해야함
     {
@@ -133,20 +184,9 @@ public class GameManager : MonoBehaviour
    
 
     //모든 몬스터가 죽으면 클리어. 다음스테이지로 이동
-    List<GameObject> _liveMonsterList = new List<GameObject>();
+    
     // 몬스터가 자신이 죽을때 마다 게임매니저 함수 호출 - 
-    public void MonsterDie(GameObject monster)
-    {
-        //몬스터 사망시 5골드 획득
-        //보스몬스터 사망시 5다이아 획득
-        //현재 몬스터리스트에서 자기자신 삭제.
-        _liveMonsterList.Remove(monster);
-        if (_liveMonsterList.Count <= 0)
-        {
-            //스테이지 클리어!
-            //다음스테이지 로드            
-        }
-    }
+    
 
     //벽이 파괴되면 사망, 현재스테이지 -1 재시작.
     //환생구현 - 1스테이지로 돌아감, 현재스테이지 비례 환생석 지급
@@ -162,6 +202,63 @@ public class GameManager : MonoBehaviour
 
     //몬스터는 태어난 위치에서 벽까지 이동함.
     //벽이 공격 사거리에 들어오면 벽을 공격
+    void MonsterSpawn()
+    {
+        if(_stage % 5 == 0)
+        {
+            //보스생성
+            Monster m = _monsterPool.Get();
+            m.transform.position = _monsterSpawnPoint.transform.position;
+            m.InitMonster(MonsterType.Boss);
+            _liveMonsterList.Add(m);
+        }
+        else
+        {
+            //일반몹생성
+            for (int i = 0; i < 5; i++)
+            {
+                Monster m = _monsterPool.Get();
+                m.transform.position = _monsterSpawnPoint.transform.position;
+                m.InitMonster(MonsterType.Nomal);
+                _liveMonsterList.Add(m);
+            }
+        }
+    }
+    public void MonsterDie(GameObject monster)
+    {
+        //몬스터 사망시 5골드 획득
+        //보스몬스터 사망시 5다이아 획득
+        //현재 몬스터리스트에서 자기자신 삭제.
+        _liveMonsterList.Remove(monster.GetComponent<Monster>());
+        if (_liveMonsterList.Count <= 0)
+        {
+            //스테이지 클리어!
+            //다음스테이지 로드
+        }
+    }
+
+    Monster CreateMonster()
+    {
+        GameObject monster = Instantiate(_monsterPrefabs[Random.Range(0, _monsterPrefabs.Length)], _monsterSpawnPoint.transform);
+        return monster.GetComponent<Monster>();
+    }
+
+    void GetMonster(Monster monster)
+    {
+        monster.gameObject.SetActive(true);
+    }
+
+    void ReleaseMonster(Monster monster)
+    {
+        _liveMonsterList.Remove(monster);
+        monster.gameObject.SetActive(false);       
+    }
+
+    void DestroyMonster(Monster monster)
+    {
+        _liveMonsterList.Remove(monster);
+        Destroy(monster.gameObject);
+    }
     #endregion
 
     #region 캐릭터 및 ai 구현

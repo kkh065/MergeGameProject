@@ -4153,7 +4153,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 455993816}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 12.02, y: -1.45, z: 0}
+  m_LocalPosition: {x: 12, y: -1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4703,6 +4703,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EquipArrowData: 
   InventoryData: 
+  _monsterPrefabs:
+  - {fileID: 6173592864269564974, guid: 9bb1207aa6cc5e94f8160dd77239cf5c, type: 3}
+  _maxPoolSize: 5
 --- !u!4 &514440815
 Transform:
   m_ObjectHideFlags: 0

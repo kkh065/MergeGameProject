@@ -513,3 +513,9 @@ public enum PriceType
 }
 
 #endregion
+
+public enum MonsterType
+{
+    Nomal,
+    Boss,
+}

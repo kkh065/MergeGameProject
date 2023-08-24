@@ -65,7 +65,7 @@ public class MainUIController : MonoBehaviour
         {
             Debug.Log("자동저장!");
             Data.Instance.SaveInventoryData();
-            GameManager.Instance.SaveCurrency();
+            GameManager.Instance.SaveGameData();
             _autoSaveTimer = 0;
         }
 
@@ -264,7 +264,7 @@ public class MainUIController : MonoBehaviour
     void RefreshData(UpgradeData data)
     {
         data.Level++;
-        GameManager.Instance.SaveCurrency();
+        GameManager.Instance.SaveGameData();
         Data.Instance.SaveUpgradeData();
         UpdateGameData(data);
         UpgradeTabList[data].GetComponent<UpgradeTab>().UpdateTabData(data);
