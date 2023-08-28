@@ -1,12 +1,12 @@
 using System.Collections.Generic;
-using System.Threading;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Pool;
-using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] Fade _fade;
+    [SerializeField] WallHpSlider _hpSlider;
+
     MainUIController _mainUI;
     CurrencyContoroller _currencyUI;
     int _gold = 0;
@@ -45,7 +45,19 @@ public class GameManager : MonoBehaviour
     int _stage = 0;
     public int Stage { get { return _stage; } set { _stage = value; } }
     int _wallHp = 0;
-    public int WallHP { get { return _wallHp; } set { _wallHp = value; } }
+    public int WallHP 
+    {
+        get { return _wallHp; }
+        set 
+        {
+            _wallHp = value;
+            _hpSlider.SetHpUI();
+            if (_wallHp <= 0)
+            {
+                OnReincarnationButton();
+            }
+        } 
+    }
     int _wallMaxHp = 0;
     public int WallMaxHP { get { return _wallHp; } set { _wallHp = value; } }
 
@@ -106,11 +118,6 @@ public class GameManager : MonoBehaviour
         InitGamaData();
     }
 
-    void Update()
-    {
-
-    }
-
     void InitGamaData()
     {
         //재화데이터
@@ -153,6 +160,7 @@ public class GameManager : MonoBehaviour
         }
 
         //게임 로드
+        StageLoad();
     }
     public void SaveGameData()
     {
@@ -165,8 +173,6 @@ public class GameManager : MonoBehaviour
     }
 
     public Vector2 GetWallPos() => _wall.transform.position;
-
-    
 
     public int GetMakingArrowLevel() //제작화살레벨 업그레이드 추가시 여기 수정해야함
     {
@@ -202,6 +208,28 @@ public class GameManager : MonoBehaviour
 
     //몬스터는 태어난 위치에서 벽까지 이동함.
     //벽이 공격 사거리에 들어오면 벽을 공격
+  
+    public void OnReincarnationButton()
+    {
+        //환생석 획득
+        _fade.FaidIn();
+        Stage = 1;
+    }
+
+    public void StageLoad()
+    {
+        //죽거나 환생 시 페이드인 후, 스테이지를 1으로만들고 시작
+        //담장체력초기화
+        _wallHp = _wallMaxHp;
+        _fade.FaidOut();
+    }
+
+
+    public void WaveLoad()
+    {
+        MonsterSpawn();
+    }
+
     void MonsterSpawn()
     {
         if(_stage % 5 == 0)
@@ -209,7 +237,7 @@ public class GameManager : MonoBehaviour
             //보스생성
             Monster m = _monsterPool.Get();
             m.transform.position = _monsterSpawnPoint.transform.position;
-            m.InitMonster(MonsterType.Boss);
+            m.InitMonster(MonsterType.Boss, _monsterPool);
             _liveMonsterList.Add(m);
         }
         else
@@ -219,7 +247,7 @@ public class GameManager : MonoBehaviour
             {
                 Monster m = _monsterPool.Get();
                 m.transform.position = _monsterSpawnPoint.transform.position;
-                m.InitMonster(MonsterType.Nomal);
+                m.InitMonster(MonsterType.Nomal, _monsterPool);
                 _liveMonsterList.Add(m);
             }
         }
@@ -232,8 +260,9 @@ public class GameManager : MonoBehaviour
         _liveMonsterList.Remove(monster.GetComponent<Monster>());
         if (_liveMonsterList.Count <= 0)
         {
-            //스테이지 클리어!
-            //다음스테이지 로드
+            _stage++;
+            SaveGameData();
+            WaveLoad();
         }
     }
 
