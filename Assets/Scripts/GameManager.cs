@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] Fade _fade;
     [SerializeField] WallHpSlider _hpSlider;
+    [SerializeField] GameObject _arrow;
+    [SerializeField] GameObject _arrowPoolParent;
 
     MainUIController _mainUI;
     CurrencyContoroller _currencyUI;
@@ -66,12 +68,17 @@ public class GameManager : MonoBehaviour
 
     //몬스터 관련 변수
     List<Monster> _liveMonsterList = new List<Monster>();
+    public List<Monster> LiveMonsterList { get { return _liveMonsterList; } set { _liveMonsterList = value; } }
     public IObjectPool<Monster> _monsterPool;
 
     [SerializeField] GameObject[] _monsterPrefabs;
     [SerializeField] int _maxPoolSize;
     GameObject _monsterSpawnPoint;
     GameObject _wall;
+
+
+    IObjectPool<ArrowController> _arrowpool;
+    int _maxArrowCount = 50;
 
     private static GameManager instance = null;
 
@@ -108,6 +115,7 @@ public class GameManager : MonoBehaviour
         InventoryData = Data.Instance.ArrowLevelData.InventoryData;
         _monsterSpawnPoint = GameObject.Find("MonsterSpawnPoint");
         _monsterPool = new ObjectPool<Monster>(CreateMonster, GetMonster, ReleaseMonster, DestroyMonster, maxSize: _maxPoolSize);
+        _arrowpool = new ObjectPool<ArrowController>(CreateArrow, GetArrow, ReleaseArrow, DestroyArrow, maxSize: _maxArrowCount);
         _wall = GameObject.Find("Wall");
     }
 
@@ -291,8 +299,29 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region 캐릭터 및 ai 구현
-    //시작할때 캐릭터 데이터에서 숫자 받아와서 그만큼 생성
-    //각 캐릭터들은 현재 소환된 몬스터 리스트를 돌아서 몬스터가 있다면 자동으로 공격
-    //공격속도 구현 및 애니메이션 맞춰서 구현
+    //캐릭터 데이터에서 숫자 받아와서 그만큼 생성 하고 이닛실행
+
+    ArrowController CreateArrow()
+    {
+        GameObject Arrow = Instantiate(_arrow, _arrowPoolParent.transform);
+        return Arrow.GetComponent<ArrowController>();
+    }
+
+    void GetArrow(ArrowController Arrow)
+    {
+        Arrow.gameObject.SetActive(true);
+    }
+
+    void ReleaseArrow(ArrowController Arrow)
+    {
+        Arrow.gameObject.SetActive(false);
+    }
+
+    void DestroyArrow(ArrowController Arrow)
+    {
+        Destroy(Arrow.gameObject);
+    }
+
     #endregion
+
 }
