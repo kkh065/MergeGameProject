@@ -17,12 +17,24 @@ public class CharacterAI : MonoBehaviour
         //해당 캐릭터의 인덱스 설정
         _index = idx;
         _arrowPool = ArrowPool;
+        UpdateCharacterState();
     }
 
     public void UpdateCharacterState()
     {
-        //인덱스에 맞는 화살가져와서 데미지 설정.
         //각종 업그레이드들 (공격력,공격속도,치명타확률,치명타배율) 적용
+        _damage = GameManager.Instance.EquipArrowData[_index] +
+            (Data.Instance.GetUpgradeData(UpgradeType.Gold, 0).Level * (int)Data.Instance.GetUpgradeData(UpgradeType.Gold, 0).Increase) +
+            (Data.Instance.GetUpgradeData(UpgradeType.Attack, 0).Level * (int)Data.Instance.GetUpgradeData(UpgradeType.Attack, 0).Increase);
+
+        int a = Data.Instance.GetUpgradeData(UpgradeType.Gold, 3).Level * (int)Data.Instance.GetUpgradeData(UpgradeType.Gold, 3).Increase;
+        int b = Data.Instance.GetUpgradeData(UpgradeType.Attack, 3).Level * (int)Data.Instance.GetUpgradeData(UpgradeType.Attack, 3).Increase;
+        float c = (a + b + 200) / 100;
+        _criticalDamage = (int)((float)_damage * c);
+        
+        //공격속도
+
+        //치명타확률        
     }
 
     // Update is called once per frame

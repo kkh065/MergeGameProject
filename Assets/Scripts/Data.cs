@@ -444,31 +444,27 @@ public class UpgradeDataList
     /*
     //골드 업그레이드
     public int GoldAttackDamageLevel = 0;
-    public int GoldAttackSpeedLevel = 0;
-    public int GoldCriticalLevel = 0;
-    public int GoldCriticalDamageLevel = 0;
-    public int GoldWallHpLevel = 0;
+    public int GoldAttackSpeedLevel = 1;
+    public int GoldCriticalLevel = 2;
+    public int GoldCriticalDamageLevel = 3;
+    public int GoldWallHpLevel = 4;
 
     //관리 업그레이드
     public int ManagementArcherLevel = 0;
-    public int ManagementWallHpLevel = 0;
-    //public int ManagementUpgrade3Level = 0;
-    //public int ManagementUpgrade4Level = 0;
-    //public int ManagementUpgrade5Level = 0;
+    public int ManagementWallHpLevel = 1;
 
     //공격 업그레이드
     public int DiaAttackDamegeLevel = 0;
-    public int DiaAttackSpeedLevel = 0;
-    public int DiaCriticalLevel = 0;
-    public int DiaCriticalDamageLevel = 0;
-    //public int AttackUpgrade5Level = 0;
+    public int DiaAttackSpeedLevel = 1;
+    public int DiaCriticalLevel = 2;
+    public int DiaCriticalDamageLevel = 3;
 
     //제작 업그레이드
     public int MakingSpeedLevel = 0;
-    public int MakingArrowLevelLevel = 0;
-    public int DiaMakingArrowLevelLevel = 0;
-    public int MakingAutoSpeedLevel = 0;
-    public int MergeAutoSpeedLevel = 0;
+    public int MakingArrowLevelLevel = 1;
+    public int DiaMakingArrowLevelLevel = 2;
+    public int MakingAutoSpeedLevel = 3;
+    public int MergeAutoSpeedLevel = 4;
 
     //특수 업그레이드 (카드개념? 보스전 연동 보상)
     */

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -8,6 +9,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] WallHpSlider _hpSlider;
     [SerializeField] GameObject _arrow;
     [SerializeField] GameObject _arrowPoolParent;
+    [SerializeField] GameObject _characterPool;
+    [SerializeField] GameObject _character;
 
     MainUIController _mainUI;
     CurrencyContoroller _currencyUI;
@@ -167,6 +170,8 @@ public class GameManager : MonoBehaviour
             _stage = 1;
         }
 
+        //캐릭터 세팅
+        UpdateCaracter();
         //게임 로드
         StageLoad();
     }
@@ -300,6 +305,29 @@ public class GameManager : MonoBehaviour
 
     #region 캐릭터 및 ai 구현
     //캐릭터 데이터에서 숫자 받아와서 그만큼 생성 하고 이닛실행
+
+    void UpdateCaracter()
+    {
+        for (int i = 0; i < 1 + Data.Instance.GetUpgradeData(UpgradeType.Management, 0).Level; i++)
+        {
+            bool IsCreate = true;
+            for(int j = 0; j < _characterPool.transform.childCount; j++)
+            {
+                if(i == j)
+                {
+                    _characterPool.transform.GetChild(j).gameObject.GetComponent<CharacterAI>().UpdateCharacterState();
+                    IsCreate = false;
+                    break;
+                }
+            }
+
+            if(IsCreate)
+            {
+                GameObject Character = Instantiate(_character, _characterPool.transform);
+                Character.GetComponent<CharacterAI>().InitCharacter(i, _arrowpool);
+            }
+        }
+    }
 
     ArrowController CreateArrow()
     {
