@@ -45,12 +45,14 @@ public class Fade : MonoBehaviour
 
     public void FaidIn()
     {
+        gameObject.SetActive(true);
         c.a = 0;
         _isFadeIn = true;
     }
 
     public void FaidOut()
     {
+        gameObject.SetActive(true);
         c.a = 1;
         _isFadeOut = true;
     }

@@ -20,6 +20,18 @@ public class Data : MonoBehaviour
     bool _isGo = false;
     AsyncOperation Operation;
 
+    public Vector3[] CharacterPosition = new Vector3[8]
+    {
+        new Vector3(-7f, -0.5f, 0),
+        new Vector3(-7.5f, -1.5f, 0),
+        new Vector3(-5.5f, -0.5f, 0),
+        new Vector3(-6f, -1.5f, 0),
+        new Vector3(-4f, -0.5f, 0),
+        new Vector3(-4.5f, -1.5f, 0),
+        new Vector3(-2.5f, -0.5f, 0),
+        new Vector3(-3f, -1.5f, 0),
+    };
+
     #endregion
 
     private static Data instance = null;
@@ -127,7 +139,7 @@ public class Data : MonoBehaviour
         data.Level = 0;
         data.MaxLevel = 20;
         data.Explan = $"{data.Name}이 {data.Increase * data.Level}%만큼 증가";
-        data.Increase = 1;
+        data.Increase = 2;
         data.Price = 100 * (data.Level + 1);
         data.UpgradeType = UpgradeType.Gold;
         data.ButtonIndex = 2;
@@ -219,9 +231,9 @@ public class Data : MonoBehaviour
         data.CordName = "DiaCriticalLevel";
         data.Name = "치명타확률";
         data.Level = 0;
-        data.MaxLevel = 20;
+        data.MaxLevel = 30;
         data.Explan = $"{data.Name} {data.Increase * data.Level}% 증가";
-        data.Increase = 0.5f;
+        data.Increase = 2;
         data.Price = 5 * (data.Level + 1);
         data.UpgradeType = UpgradeType.Attack;
         data.ButtonIndex = 2;

@@ -279,15 +279,19 @@ public class MainUIController : MonoBehaviour
                 {
                     case 0:
                         //공격력 증가
+                        GameManager.Instance.UpdateCaracter();
                         break;
                     case 1:
                         //공격속도 증가
+                        GameManager.Instance.UpdateCaracter();
                         break;
                     case 2:
                         //치명타 확률
+                        GameManager.Instance.UpdateCaracter();
                         break;
                     case 3:
                         //치명타 배율
+                        GameManager.Instance.UpdateCaracter();
                         break;
                     case 4:
                         //담장 체력 증가
@@ -299,6 +303,7 @@ public class MainUIController : MonoBehaviour
                 {
                     case 0:
                         //캐릭터 수 증가
+                        GameManager.Instance.UpdateCaracter();
                         break;
                     case 1:
                         //담장체력 증가
@@ -310,15 +315,19 @@ public class MainUIController : MonoBehaviour
                 {
                     case 0:
                         //공격력
+                        GameManager.Instance.UpdateCaracter();
                         break;
                     case 1:
                         //공격속도
+                        GameManager.Instance.UpdateCaracter();
                         break;
                     case 2:
                         //치명타 확률
+                        GameManager.Instance.UpdateCaracter();
                         break;
                     case 3:
                         //치명타 배율
+                        GameManager.Instance.UpdateCaracter();
                         break;
                 }
                 break;

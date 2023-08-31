@@ -231,6 +231,7 @@ public class GameManager : MonoBehaviour
 
     public void StageLoad()
     {
+        Debug.Log("스테이지 로드");
         //죽거나 환생 시 페이드인 후, 스테이지를 1으로만들고 시작
         //담장체력초기화
         _wallHp = _wallMaxHp;
@@ -240,6 +241,7 @@ public class GameManager : MonoBehaviour
 
     public void WaveLoad()
     {
+        Debug.Log("웨이브 시작");
         MonsterSpawn();
     }
 
@@ -306,8 +308,9 @@ public class GameManager : MonoBehaviour
     #region 캐릭터 및 ai 구현
     //캐릭터 데이터에서 숫자 받아와서 그만큼 생성 하고 이닛실행
 
-    void UpdateCaracter()
+    public void UpdateCaracter()
     {
+        Debug.Log("캐릭터 세팅 시작");
         for (int i = 0; i < 1 + Data.Instance.GetUpgradeData(UpgradeType.Management, 0).Level; i++)
         {
             bool IsCreate = true;
@@ -316,6 +319,7 @@ public class GameManager : MonoBehaviour
                 if(i == j)
                 {
                     _characterPool.transform.GetChild(j).gameObject.GetComponent<CharacterAI>().UpdateCharacterState();
+                    _characterPool.transform.GetChild(j).position = Data.Instance.CharacterPosition[j];
                     IsCreate = false;
                     break;
                 }
@@ -325,6 +329,7 @@ public class GameManager : MonoBehaviour
             {
                 GameObject Character = Instantiate(_character, _characterPool.transform);
                 Character.GetComponent<CharacterAI>().InitCharacter(i, _arrowpool);
+                Character.transform.position = Data.Instance.CharacterPosition[i];
             }
         }
     }
@@ -351,5 +356,4 @@ public class GameManager : MonoBehaviour
     }
 
     #endregion
-
 }
