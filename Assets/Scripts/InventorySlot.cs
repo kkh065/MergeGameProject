@@ -18,7 +18,7 @@ public class InventorySlot : MonoBehaviour
         Index = idx;
         _textLevel.text = _ArrowLevel.ToString();
         _icon.sprite = Resources.Load<Sprite>("Arrow/Arrow" + _ArrowLevel / 10);
-        gameObject.SetActive(true);        
+        gameObject.SetActive(true);
     }
 
     public void OnDragBegin(BaseEventData data)

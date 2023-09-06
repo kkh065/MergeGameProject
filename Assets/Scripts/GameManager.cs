@@ -241,8 +241,8 @@ public class GameManager : MonoBehaviour
 
     public void WaveLoad()
     {
-        Debug.Log("웨이브 시작");
-        MonsterSpawn();
+        Debug.Log($"웨이브 시작. 현재 웨이브 : {_stage}");
+        Invoke("MonsterSpawn", 1f);
     }
 
     void MonsterSpawn()
@@ -261,7 +261,7 @@ public class GameManager : MonoBehaviour
             for (int i = 0; i < 5; i++)
             {
                 Monster m = _monsterPool.Get();
-                m.transform.position = _monsterSpawnPoint.transform.position;
+                m.transform.position = _monsterSpawnPoint.transform.position + new Vector3(Random.Range(-1, 1f), Random.Range(-1, 1f), 0);
                 m.InitMonster(MonsterType.Nomal, _monsterPool);
                 _liveMonsterList.Add(m);
             }

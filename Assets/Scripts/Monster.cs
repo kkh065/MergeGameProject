@@ -28,6 +28,7 @@ public class Monster : MonoBehaviour
         }
 
         _hp = _maxHP;
+        Debug.Log($"몬스터 체력 : {_hp}");
         _targetPos = GameManager.Instance.GetWallPos();
         _pool = pool;
     }
@@ -40,7 +41,7 @@ public class Monster : MonoBehaviour
         float attackCooltime = 0;
         attackCooltime += Time.deltaTime;
 
-        if (Vector3.Distance(_targetPos, transform.position) < 0.1)
+        if (Vector3.Distance(_targetPos, transform.position) < 1)
         {
             if(attackCooltime > attackSpeed)
             {
@@ -51,13 +52,16 @@ public class Monster : MonoBehaviour
         }
         else
         {
-            transform.position += (_targetPos - transform.position) * Time.deltaTime;
+            Vector3 dir = _targetPos - transform.position;
+            dir.Normalize();
+            transform.position += new Vector3(dir.x * Time.deltaTime * 1.5f, 0, 0);
         }
     }
 
     public void TakeDamage(int dmg)
     {
         _hp -= dmg;
+        Debug.Log($"받은 데미지 : {dmg}");
         if( _hp <= 0 )
         {
             GameManager.Instance.MonsterDie(gameObject);

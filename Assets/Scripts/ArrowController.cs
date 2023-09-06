@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Pool;
+using UnityEngine.UI;
 
 public class ArrowController : MonoBehaviour
 {
@@ -16,9 +17,13 @@ public class ArrowController : MonoBehaviour
 
     public void InitArrow(Monster monster, int Dmg, int ArrowLevel, IObjectPool<ArrowController> Pool)
     {
+        transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+
         _targetMonster = monster;
         _damage = Dmg;
         _pool = Pool;
+
+        GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Arrow/Arrow" + ArrowLevel / 10);
 
         startPos = transform.position;
         endPos = _targetMonster.transform.position;
@@ -34,8 +39,6 @@ public class ArrowController : MonoBehaviour
             return;
         }
 
-        // 타겟을 향해 날아가게끔 적용
-        // 맞으면 데미지 처리 어떻게 할 지 생각 거리가 0.1보다 가까워지면 맞았다고 생각하고 해당 몬스터가 데미지를 입게끔 만들자
         if(Vector3.Distance(_targetMonster.transform.position, transform.position) < 0.1)
         {
             _targetMonster.TakeDamage(_damage);
@@ -60,11 +63,16 @@ public class ArrowController : MonoBehaviour
     protected IEnumerator BulletMove()
     {
         timer = 0;
-        while (transform.position.y >= startPos.y)
+        while (transform.position.y >= startPos.y-2)
         {
             timer += Time.deltaTime;
-            Vector3 tempPos = Parabola(startPos, _targetMonster.transform.position, 5, timer);
-            transform.position = tempPos;
+            Vector3 NextPos = Parabola(startPos, _targetMonster.transform.position, 5, timer);
+
+            float angle = Mathf.Atan2((NextPos - transform.position).y, (NextPos - transform.position).x) * Mathf.Rad2Deg - 45f;
+            transform.rotation = Quaternion.Euler(0, 0, angle);
+            
+            transform.position = NextPos;
+
             yield return new WaitForEndOfFrame();
         }
     }
