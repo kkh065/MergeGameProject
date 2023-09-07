@@ -30,6 +30,9 @@ public class MainUIController : MonoBehaviour
 
     public void InitializedGame()
     {
+        //제작 쿨타임 관련 초기화
+        SetCooltime();
+
         //업그레이드 슬롯 관련 초기화
         InitializedUpgradeTab();
 
@@ -43,7 +46,7 @@ public class MainUIController : MonoBehaviour
     {
         //자동제작
         _autoMakingTimer += Time.deltaTime;
-        if(_autoMakingTimer > 10)
+        if(_autoMakingTimer > _autoMakingCooltime)
         {
             Debug.Log("자동제작!");
             MakingArrow();
@@ -52,7 +55,7 @@ public class MainUIController : MonoBehaviour
 
         //자동합성
         _autoMergeTimer += Time.deltaTime;
-        if (_autoMergeTimer > 10)
+        if (_autoMergeTimer > _AutoMergeCooltime)
         {
             Debug.Log("자동합성!");
             MergeArrow();
@@ -277,77 +280,40 @@ public class MainUIController : MonoBehaviour
             case UpgradeType.Gold:
                 switch (data.ButtonIndex)
                 {
-                    case 0:
-                        //공격력 증가
-                        GameManager.Instance.UpdateCaracter();
-                        break;
-                    case 1:
-                        //공격속도 증가
-                        GameManager.Instance.UpdateCaracter();
-                        break;
-                    case 2:
-                        //치명타 확률
-                        GameManager.Instance.UpdateCaracter();
-                        break;
-                    case 3:
-                        //치명타 배율
-                        GameManager.Instance.UpdateCaracter();
-                        break;
-                    case 4:
-                        //담장 체력 증가
-                        break;
+                    case 0: GameManager.Instance.UpdateCaracter(); break; //공격력 증가
+                    case 1: GameManager.Instance.UpdateCaracter(); break; //공격속도 증가
+                    case 2: GameManager.Instance.UpdateCaracter(); break; //치명타 확률
+                    case 3: GameManager.Instance.UpdateCaracter(); break; //치명타 배율
+                    case 4: GameManager.Instance.UpdateWallData(); break; //담장 체력 증가
                 }
                 break;
             case UpgradeType.Management:
                 switch (data.ButtonIndex)
                 {
-                    case 0:
-                        //캐릭터 수 증가
-                        GameManager.Instance.UpdateCaracter();
-                        break;
-                    case 1:
-                        //담장체력 증가
-                        break;
+                    case 0: GameManager.Instance.UpdateCaracter(); break; //캐릭터 수 증가
+                    case 1: GameManager.Instance.UpdateWallData(); break; //담장체력 증가
                 }
                 break;
             case UpgradeType.Attack:
                 switch (data.ButtonIndex)
                 {
-                    case 0:
-                        //공격력
-                        GameManager.Instance.UpdateCaracter();
-                        break;
-                    case 1:
-                        //공격속도
-                        GameManager.Instance.UpdateCaracter();
-                        break;
-                    case 2:
-                        //치명타 확률
-                        GameManager.Instance.UpdateCaracter();
-                        break;
-                    case 3:
-                        //치명타 배율
-                        GameManager.Instance.UpdateCaracter();
-                        break;
+                    case 0: GameManager.Instance.UpdateCaracter(); break; //공격력 증가
+                    case 1: GameManager.Instance.UpdateCaracter(); break; //공격속도 증가
+                    case 2: GameManager.Instance.UpdateCaracter(); break; //치명타 확률
+                    case 3: GameManager.Instance.UpdateCaracter(); break; //치명타 배율
                 }
                 break;
             case UpgradeType.Making:
                 switch (data.ButtonIndex)
                 {
                     case 0:
-                        //수동화살제작 쿨타임 감소
-                        break;
                     case 1:
-                        //제작화살레벨 증가
-                        break;
                     case 2:
-                        //제작화살레벨 증가
+                        //수동제작시간감소, 제작화살레벨 증가 알아서 자동적용.
                         break;
                     case 3:
-                        //자동제작 시간
-                        break;
                     case 4:
-                        //자동합성 시간
+                        SetCooltime();
                         break;
                 }
                 break;
@@ -398,6 +364,19 @@ public class MainUIController : MonoBehaviour
     float _autoSaveTimer = 0;
     float _makingCooltime = 0;
     float _mergeCooltime = 0;
+
+    float _autoMakingCooltime = 0;
+    float _AutoMergeCooltime = 0;
+    
+    void SetCooltime()
+    {
+        //자동화살제작 쿨타임
+        _autoMakingCooltime = 11f -
+            ((float)Data.Instance.GetUpgradeData(UpgradeType.Making, 3).Level * Data.Instance.GetUpgradeData(UpgradeType.Making, 3).Increase);
+        //자동화살합성 쿨타임
+        _AutoMergeCooltime = 11f -
+            ((float)Data.Instance.GetUpgradeData(UpgradeType.Making, 4).Level * Data.Instance.GetUpgradeData(UpgradeType.Making, 4).Increase);
+    }
 
     void MergeInventoryOpen()
     {
@@ -462,7 +441,8 @@ public class MainUIController : MonoBehaviour
         if(_makingCooltime <= 0)
         {
             MakingArrow();
-            _makingCooltime = 10;
+            _makingCooltime = 5f -
+                ((float)Data.Instance.GetUpgradeData(UpgradeType.Making, 0).Level * Data.Instance.GetUpgradeData(UpgradeType.Making, 0).Increase);
         }
     }
 

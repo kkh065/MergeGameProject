@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.Pool;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject _arrowPoolParent;
     [SerializeField] GameObject _characterPool;
     [SerializeField] GameObject _character;
+    [SerializeField] Text _StageText;
 
     MainUIController _mainUI;
     CurrencyContoroller _currencyUI;
@@ -64,7 +66,7 @@ public class GameManager : MonoBehaviour
         } 
     }
     int _wallMaxHp = 0;
-    public int WallMaxHP { get { return _wallHp; } set { _wallHp = value; } }
+    public int WallMaxHP { get { return _wallMaxHp; } set { _wallMaxHp = value; } }
 
     public int[] EquipArrowData;
     public List<int> InventoryData;
@@ -149,18 +151,9 @@ public class GameManager : MonoBehaviour
 
 
         //벽데이터
-        if (PlayerPrefs.HasKey("WallMaxHp"))
-        {
-            _wallMaxHp = PlayerPrefs.GetInt("WallMaxHp");
-        }
-        else
-        {
-            _wallMaxHp = 100;
-        }
-        _wallHp = _wallMaxHp;
+        UpdateWallData();
 
-        //
-
+        //스테이지 정보
         if (PlayerPrefs.HasKey("Stage"))
         {
             _stage = PlayerPrefs.GetInt("Stage");
@@ -174,6 +167,15 @@ public class GameManager : MonoBehaviour
         UpdateCaracter();
         //게임 로드
         StageLoad();
+    }
+
+    public void UpdateWallData()
+    {
+        _wallMaxHp = 100 +
+        (Data.Instance.GetUpgradeData(UpgradeType.Gold, 4).Level * (int)Data.Instance.GetUpgradeData(UpgradeType.Gold, 4).Increase) +
+        (Data.Instance.GetUpgradeData(UpgradeType.Management, 1).Level * (int)Data.Instance.GetUpgradeData(UpgradeType.Management, 1).Increase);
+        _wallHp = _wallMaxHp;
+        _hpSlider.SetHpUI();
     }
     public void SaveGameData()
     {
@@ -189,7 +191,11 @@ public class GameManager : MonoBehaviour
 
     public int GetMakingArrowLevel() //제작화살레벨 업그레이드 추가시 여기 수정해야함
     {
-        return 1;
+        int MakinArrowLevel = 1 +
+            (Data.Instance.GetUpgradeData(UpgradeType.Making, 1).Level * (int)Data.Instance.GetUpgradeData(UpgradeType.Making, 1).Increase) +
+            (Data.Instance.GetUpgradeData(UpgradeType.Making, 2).Level * (int)Data.Instance.GetUpgradeData(UpgradeType.Making, 2).Increase);
+
+        return MakinArrowLevel;
     }
 
     public int GetMaxArrowLevel()
@@ -222,13 +228,14 @@ public class GameManager : MonoBehaviour
     //몬스터는 태어난 위치에서 벽까지 이동함.
     //벽이 공격 사거리에 들어오면 벽을 공격
   
-    public void OnReincarnationButton()
+    
+
+    void ExecutionReincarnation()
     {
-        //환생석 획득
+        Reincarnation += (_stage - 1) * 10;
         _fade.FaidIn();
         Stage = 1;
     }
-
     public void StageLoad()
     {
         Debug.Log("스테이지 로드");
@@ -243,6 +250,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log($"웨이브 시작. 현재 웨이브 : {_stage}");
         Invoke("MonsterSpawn", 1f);
+        _StageText.text = "Stage " + _stage.ToString();
     }
 
     void MonsterSpawn()
@@ -267,10 +275,18 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-    public void MonsterDie(GameObject monster)
+    public void MonsterDie(GameObject monster, MonsterType type)
     {
-        //몬스터 사망시 5골드 획득
-        //보스몬스터 사망시 5다이아 획득
+        switch (type)
+        {
+            case MonsterType.Nomal:
+                Gold += 5;
+                break;
+            case MonsterType.Boss:
+                Dia += 5;
+                break;
+        }
+        
         //현재 몬스터리스트에서 자기자신 삭제.
         _liveMonsterList.Remove(monster.GetComponent<Monster>());
         if (_liveMonsterList.Count <= 0)
@@ -355,5 +371,19 @@ public class GameManager : MonoBehaviour
         Destroy(Arrow.gameObject);
     }
 
+    #endregion
+
+    #region 버튼함수들
+
+    public void OnReincarnationButton()
+    {
+        ExecutionReincarnation();
+    }
+
+    public void OnSaveButton()
+    {
+        Data.Instance.SaveInventoryData();
+        SaveGameData();
+    }
     #endregion
 }

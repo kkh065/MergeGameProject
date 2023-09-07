@@ -2,20 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
+using UnityEngine.UI;
 
 public class Monster : MonoBehaviour
 {
+    [SerializeField] GameObject _hpPanel;
+    [SerializeField] Image _imageHP;
+
     Vector3 _targetPos;
     int _maxHP = 0;
     int _hp = 0;
     int _attackDamage = 1;
     float attackSpeed = 1;
+    float attackCooltime = 0;
+    MonsterType _type;
     IObjectPool<Monster> _pool;
+
+    private void Awake()
+    {
+        _hpPanel.SetActive(false);
+    }
 
     public void InitMonster(MonsterType type, IObjectPool<Monster> pool)
     {
         _targetPos = GameManager.Instance.GetWallPos();
-        switch (type)
+        _type = type;
+        switch (_type)
         {
             case MonsterType.Nomal:
                 _maxHP = 10 + GameManager.Instance.Stage;
@@ -33,19 +45,17 @@ public class Monster : MonoBehaviour
         _pool = pool;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         //벽을향해 계속 가게끔만들고, 벽이랑 일정거리 안으로 들어오면 공격
         if (_targetPos == null) return;
 
-        float attackCooltime = 0;
-        attackCooltime += Time.deltaTime;
-
-        if (Vector3.Distance(_targetPos, transform.position) < 1)
+        if ((transform.position.x - _targetPos.x) < 1)
         {
-            if(attackCooltime > attackSpeed)
+            attackCooltime += Time.deltaTime;
+            if (attackCooltime > attackSpeed)
             {
-                //공격
+                //공격                
                 GameManager.Instance.WallHP -= _attackDamage;
                 attackCooltime = 0;
             }
@@ -54,18 +64,25 @@ public class Monster : MonoBehaviour
         {
             Vector3 dir = _targetPos - transform.position;
             dir.Normalize();
-            transform.position += new Vector3(dir.x * Time.deltaTime * 1.5f, 0, 0);
+            transform.position += new Vector3(dir.x * Time.deltaTime * 2f, 0, 0);
         }
     }
 
     public void TakeDamage(int dmg)
     {
         _hp -= dmg;
+        SetHpSlider();
         Debug.Log($"받은 데미지 : {dmg}");
         if( _hp <= 0 )
         {
-            GameManager.Instance.MonsterDie(gameObject);
+            GameManager.Instance.MonsterDie(gameObject, _type);
             _pool.Release(this);
         }
+    }
+
+    void SetHpSlider()
+    {
+        if (_hpPanel.activeSelf == false) _hpPanel.SetActive(true);
+        _imageHP.fillAmount = (float)_hp / (float)_maxHP;
     }
 }

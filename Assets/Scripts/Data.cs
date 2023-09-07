@@ -298,7 +298,7 @@ public class Data : MonoBehaviour
         data.Name = "자동 제작";
         data.Level = 0;
         data.MaxLevel = 50;
-        data.Explan = $"(자동)10초에 {data.Increase * data.Level}번 화살을 제작";
+        data.Explan = $"(자동){11f - (data.Increase * data.Level)}초에 1번 화살을 제작";
         data.Increase = 0.2f;
         data.Price = 5 * (data.Level + 1);
         data.UpgradeType = UpgradeType.Making;
@@ -311,7 +311,7 @@ public class Data : MonoBehaviour
         data.Name = "자동 합성";
         data.Level = 0;
         data.MaxLevel = 50;
-        data.Explan = $"(자동)10초에 {data.Increase * data.Level}번 화살을 결합";
+        data.Explan = $"(자동){11f - (data.Increase * data.Level)}초에 1번 화살을 결합";
         data.Increase = 0.2f;
         data.Price = 5 * (data.Level + 1);
         data.UpgradeType = UpgradeType.Making;
