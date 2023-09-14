@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.Pool;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -232,6 +232,13 @@ public class GameManager : MonoBehaviour
 
     void ExecutionReincarnation()
     {
+        //몬스터 전부삭제
+        for(int i = 0; i < _liveMonsterList.Count; i++)
+        {
+            _liveMonsterList[i].ResetMonster();
+            _liveMonsterList.Remove(_liveMonsterList[i]);
+        }
+
         Reincarnation += (_stage - 1) * 10;
         _fade.FaidIn();
         Stage = 1;
@@ -327,6 +334,7 @@ public class GameManager : MonoBehaviour
     public void UpdateCaracter()
     {
         Debug.Log("캐릭터 세팅 시작");
+        
         for (int i = 0; i < 1 + Data.Instance.GetUpgradeData(UpgradeType.Management, 0).Level; i++)
         {
             bool IsCreate = true;
@@ -348,6 +356,7 @@ public class GameManager : MonoBehaviour
                 Character.transform.position = Data.Instance.CharacterPosition[i];
             }
         }
+       
     }
 
     ArrowController CreateArrow()

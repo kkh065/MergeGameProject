@@ -63,7 +63,7 @@ public class ArrowController : MonoBehaviour
     protected IEnumerator BulletMove()
     {
         timer = 0;
-        while (transform.position.y >= startPos.y-2)
+        while (transform.position.y >= startPos.y - 5)
         {
             timer += Time.deltaTime;
             Vector3 NextPos = Parabola(startPos, _targetMonster.transform.position, 5, timer);

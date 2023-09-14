@@ -20,17 +20,19 @@ public class Data : MonoBehaviour
     bool _isGo = false;
     AsyncOperation Operation;
 
-    public Vector3[] CharacterPosition = new Vector3[8]
+    Vector3[] _characterPosition = new Vector3[8]
     {
-        new Vector3(-7f, -0.5f, 0),
-        new Vector3(-7.5f, -1.5f, 0),
-        new Vector3(-5.5f, -0.5f, 0),
-        new Vector3(-6f, -1.5f, 0),
-        new Vector3(-4f, -0.5f, 0),
-        new Vector3(-4.5f, -1.5f, 0),
-        new Vector3(-2.5f, -0.5f, 0),
-        new Vector3(-3f, -1.5f, 0),
+        new Vector3(-7f, -1f, 0),
+        new Vector3(-7.5f, -2f, 0),
+        new Vector3(-5.5f, -1f, 0),
+        new Vector3(-6f, -2f, 0),
+        new Vector3(-4f, -1f, 0),
+        new Vector3(-4.5f, -2f, 0),
+        new Vector3(-2.5f, -1f, 0),
+        new Vector3(-3f, -2f, 0),
     };
+
+    public Vector3[] CharacterPosition { get { return _characterPosition; } }
 
     #endregion
 

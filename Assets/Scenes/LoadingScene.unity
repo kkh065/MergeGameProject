@@ -513,15 +513,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UpgradeDatas:
     upgradeDataList: []
-  CharacterPosition:
-  - {x: -7, y: -0.5, z: 0}
-  - {x: -7.5, y: -1.5, z: 0}
-  - {x: -5.5, y: -0.5, z: 0}
-  - {x: -6, y: -1.5, z: 0}
-  - {x: -4, y: -0.5, z: 0}
-  - {x: -4.5, y: -1.5, z: 0}
-  - {x: -2.5, y: -0.5, z: 0}
-  - {x: -3, y: -1.5, z: 0}
 --- !u!4 &755032906
 Transform:
   m_ObjectHideFlags: 0

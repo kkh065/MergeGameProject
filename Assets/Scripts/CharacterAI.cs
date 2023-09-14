@@ -11,6 +11,12 @@ public class CharacterAI : MonoBehaviour
     int _index = 0;
 
     IObjectPool<ArrowController> _arrowPool;
+    Animator _ani;
+
+    private void Awake()
+    {
+        _ani = GetComponent<Animator>();
+    }
 
 
     public void InitCharacter(int idx, IObjectPool<ArrowController> ArrowPool)
@@ -52,12 +58,12 @@ public class CharacterAI : MonoBehaviour
         _attackCool += Time.deltaTime;
         if (_attackCool > _attackSpeed && GameManager.Instance.LiveMonsterList.Count > 0)
         {
-            Attack();
+            _ani.SetTrigger("Attack");
             _attackCool = 0;
         }
     }
 
-    void Attack()
+    public void Attack()
     {
         //크리티컬 확률 계산 후 크리티컬이면 크리뎀, 아니면 그냥뎀 넣어서 쏘자
         int RandomPercent = Random.Range(0, 99);
@@ -74,7 +80,7 @@ public class CharacterAI : MonoBehaviour
 
         //화살생성, 위치초기화, 화살 이닛 실행
         ArrowController Arrow = _arrowPool.Get();
-        Arrow.transform.position = transform.position;
+        Arrow.transform.position = transform.position + new Vector3(0, 1, 0);
         Arrow.InitArrow(GameManager.Instance.LiveMonsterList[0], LastDamage, GameManager.Instance.EquipArrowData[_index], _arrowPool);
     }
 }
