@@ -81,6 +81,7 @@ public class CharacterAI : MonoBehaviour
         //화살생성, 위치초기화, 화살 이닛 실행
         ArrowController Arrow = _arrowPool.Get();
         Arrow.transform.position = transform.position + new Vector3(0, 1, 0);
+        if(GameManager.Instance.LiveMonsterList.Count > 0)
         Arrow.InitArrow(GameManager.Instance.LiveMonsterList[0], LastDamage, GameManager.Instance.EquipArrowData[_index], _arrowPool);
     }
 }

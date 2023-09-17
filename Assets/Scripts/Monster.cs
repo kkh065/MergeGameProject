@@ -8,7 +8,8 @@ public class Monster : MonoBehaviour
 {
     [SerializeField] GameObject _hpPanel;
     [SerializeField] Image _imageHP;
-    
+    [SerializeField] Animator _ani;
+
 
     Vector3 _targetPos;
     int _maxHP = 0;
@@ -18,12 +19,11 @@ public class Monster : MonoBehaviour
     float attackCooltime = 0;
     MonsterType _type;
     IObjectPool<Monster> _pool;
-    Animator _ani;
+    
 
     private void Awake()
     {
         _hpPanel.SetActive(false);
-        _ani = GetComponent<Animator>();
     }
 
     public void InitMonster(MonsterType type, IObjectPool<Monster> pool)
@@ -70,22 +70,23 @@ public class Monster : MonoBehaviour
         //벽을향해 계속 가게끔만들고, 벽이랑 일정거리 안으로 들어오면 공격
         if (_targetPos == null) return;
 
-        if ((transform.position.x - _targetPos.x) < 1)
+        if ((transform.position.x - _targetPos.x) < 1.5f)
         {
             attackCooltime += Time.deltaTime;
             if (attackCooltime > attackSpeed)
             {
-                //공격                
+                //공격
                 GameManager.Instance.WallHP -= _attackDamage;
                 attackCooltime = 0;
                 _ani.SetBool("isWalk", false);
+                _ani.SetTrigger("Attack");
             }
         }
         else
         {
             Vector3 dir = _targetPos - transform.position;
             dir.Normalize();
-            transform.position += new Vector3(dir.x * Time.deltaTime * 200f, 0, 0);
+            transform.position += new Vector3(dir.x * Time.deltaTime * 2f, 0, 0);
             _ani.SetBool("isWalk", true);
         }
     }

@@ -4846,18 +4846,18 @@ MonoBehaviour:
   EquipArrowData: 
   InventoryData: 
   _monsterPrefabs:
-  - {fileID: 2900698327615245428, guid: 2dbf0f46354d1e248864e16baba56ec7, type: 3}
-  - {fileID: 7299951614655326359, guid: fa034ae69ce4c3a43887fce74cb8be13, type: 3}
-  - {fileID: 3828276600541268337, guid: 99f933f2ca6908444b523a25a7d9312d, type: 3}
-  - {fileID: 6237475638776956871, guid: 3347233b34c35794e934c7dcaa8095c4, type: 3}
-  - {fileID: 8320083492471578630, guid: de0cfdb6a4e157e46ae9a88f67e2e56b, type: 3}
-  - {fileID: 4369327001251909205, guid: 9a0d7ddd19723544ea358579478c2021, type: 3}
-  - {fileID: 8299973755601524716, guid: 263246a2cdf4d35439d980cba458574f, type: 3}
-  - {fileID: 4541747320833907525, guid: f843005901e8bce48a5b995e31696a50, type: 3}
-  - {fileID: 3903629356147282426, guid: c89d7634097867b4cb1c6897f17ae3a8, type: 3}
-  - {fileID: 8830541389057557238, guid: ed5e4538acd894f4b895baaf485d80d1, type: 3}
-  - {fileID: 2442289943446879032, guid: daa9698d2f10bd446ba8a261610e245c, type: 3}
-  - {fileID: 5295252750232401364, guid: 41ef6ba37c5535f469bc1c76909d921a, type: 3}
+  - {fileID: 2805794644067774951, guid: 1f2e972e62c9db14ca5d536c80e556ae, type: 3}
+  - {fileID: 677063455178083713, guid: b2d18160b8f49ca4391017215d6f64e6, type: 3}
+  - {fileID: 2796413970685032791, guid: 77a0e14f3ba14cd438c33d967bada493, type: 3}
+  - {fileID: 6790831864693545559, guid: abff5ba10b1a868499a847343fe9b109, type: 3}
+  - {fileID: 6471094919265639698, guid: f41e66f0ff2d50f479d31a28e977d97a, type: 3}
+  - {fileID: 7537150230838723459, guid: 87f4845e5b01ca04fa613b9315ca72ec, type: 3}
+  - {fileID: 4225886741757432247, guid: c53f725398660eb4fb31615e2a4aa853, type: 3}
+  - {fileID: 2834017447569690304, guid: c337926d997fa5d4d819e82820fea8e7, type: 3}
+  - {fileID: 7232181591470218959, guid: 958a516065859f34782ba9616bc3b126, type: 3}
+  - {fileID: 2735729214092449052, guid: bae48c185985631419c6d257d8b172a2, type: 3}
+  - {fileID: 1023203806161260505, guid: 90368d6da19849f44b56492e0fcd0b67, type: 3}
+  - {fileID: 1791503348244991619, guid: 42c371729cea7164e97220bcdb56e78b, type: 3}
   _maxPoolSize: 5
 --- !u!4 &514440815
 Transform:
@@ -12627,15 +12627,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UpgradeDatas:
     upgradeDataList: []
-  CharacterPosition:
-  - {x: -7, y: -0.5, z: 0}
-  - {x: -7.5, y: -1.5, z: 0}
-  - {x: -5.5, y: -0.5, z: 0}
-  - {x: -6, y: -1.5, z: 0}
-  - {x: -4, y: -0.5, z: 0}
-  - {x: -4.5, y: -1.5, z: 0}
-  - {x: -2.5, y: -0.5, z: 0}
-  - {x: -3, y: -1.5, z: 0}
 --- !u!4 &1332428517
 Transform:
   m_ObjectHideFlags: 0
