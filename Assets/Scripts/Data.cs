@@ -331,6 +331,7 @@ public class Data : MonoBehaviour
     {
         Operation = SceneManager.LoadSceneAsync("GameScene");
         Operation.allowSceneActivation = false;
+        LoadSoundData();
 
         while (true)
         {
@@ -447,6 +448,11 @@ public class Data : MonoBehaviour
 
         return null;
     }
+
+    void LoadSoundData()
+    {
+
+    }
 }
 #region 세이브데이터 클래스
 
@@ -528,4 +534,9 @@ public enum MonsterType
 {
     Nomal,
     Boss,
+}
+
+public enum SoundIndex
+{
+
 }
