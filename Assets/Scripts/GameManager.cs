@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
-using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -13,8 +12,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject _characterPool;
     [SerializeField] GameObject _character;
     [SerializeField] Text _StageText;
+    [SerializeField] GameObject[] _monsterPrefabs;
+    [SerializeField] int _maxPoolSize;
+    [SerializeField] AudioSource _audio;
 
-    MainUIController _mainUI;
     CurrencyContoroller _currencyUI;
     int _gold = 0;
     public int Gold
@@ -76,12 +77,8 @@ public class GameManager : MonoBehaviour
     public List<Monster> LiveMonsterList { get { return _liveMonsterList; } set { _liveMonsterList = value; } }
     public IObjectPool<Monster> _monsterPool;
 
-    [SerializeField] GameObject[] _monsterPrefabs;
-    [SerializeField] int _maxPoolSize;
     GameObject _monsterSpawnPoint;
     GameObject _wall;
-
-
     IObjectPool<ArrowController> _arrowpool;
     int _maxArrowCount = 50;
 
@@ -104,15 +101,10 @@ public class GameManager : MonoBehaviour
         if (null == instance)
         {
             instance = this;
-
-            //씬 전환이 되더라도 파괴되지 않게 한다.
             DontDestroyOnLoad(this.gameObject);
         }
         else
         {
-            //만약 씬 이동이 되었는데 그 씬에도 Hierarchy에 GameMgr이 존재할 수도 있다.
-            //그럴 경우엔 이전 씬에서 사용하던 인스턴스를 계속 사용해주는 경우가 많은 것 같다.
-            //그래서 이미 전역변수인 instance에 인스턴스가 존재한다면 자신을 삭제해준다.
             Destroy(this.gameObject);
         }
 
@@ -126,9 +118,9 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        _mainUI = GameObject.Find("MainUI").GetComponent<MainUIController>();
         _currencyUI = GameObject.Find("Currency").GetComponent<CurrencyContoroller>();
         InitGamaData();
+        SetBGMVolume();
     }
 
     void InitGamaData()
@@ -204,31 +196,8 @@ public class GameManager : MonoBehaviour
         return 0;
     }
 
-    #region 스테이지 관리
-    //현재 스테이지 데이터 저장, 게임 시작 시 현재 스테이지 로드
-   
 
-    //모든 몬스터가 죽으면 클리어. 다음스테이지로 이동
-    
-    // 몬스터가 자신이 죽을때 마다 게임매니저 함수 호출 - 
-    
-
-    //벽이 파괴되면 사망, 현재스테이지 -1 재시작.
-    //환생구현 - 1스테이지로 돌아감, 현재스테이지 비례 환생석 지급
-
-    #endregion
-
-    #region 몬스터 스폰 및 ai 구현
-    //스테이지당 5마리 - 스폰시 리스트를 만들어서 담음. 몬스터프리팹 리스트에서 랜덤하게 생성.
-    //5스테이지 마다 보스몹 스폰
-
-    //몬스터는 스테이지가 올라갈수록 체력이 증가함.
-    //풀링 구현
-
-    //몬스터는 태어난 위치에서 벽까지 이동함.
-    //벽이 공격 사거리에 들어오면 벽을 공격
-  
-    
+    #region 몬스터 스폰 및 ai 구현    
 
     void ExecutionReincarnation()
     {
@@ -276,7 +245,7 @@ public class GameManager : MonoBehaviour
             for (int i = 0; i < 5; i++)
             {
                 Monster m = _monsterPool.Get();
-                m.transform.position = _monsterSpawnPoint.transform.position + new Vector3(Random.Range(-1, 1f), Random.Range(-1, 1f), 0);
+                m.transform.position = _monsterSpawnPoint.transform.position + new Vector3(UnityEngine.Random.Range(-1, 1f), UnityEngine.Random.Range(-1, 1f), 0);
                 m.InitMonster(MonsterType.Nomal, _monsterPool);
                 _liveMonsterList.Add(m);
             }
@@ -306,7 +275,7 @@ public class GameManager : MonoBehaviour
 
     Monster CreateMonster()
     {
-        GameObject monster = Instantiate(_monsterPrefabs[Random.Range(0, _monsterPrefabs.Length)], _monsterSpawnPoint.transform);
+        GameObject monster = Instantiate(_monsterPrefabs[UnityEngine.Random.Range(0, _monsterPrefabs.Length)], _monsterSpawnPoint.transform);
         return monster.GetComponent<Monster>();
     }
 
@@ -355,8 +324,12 @@ public class GameManager : MonoBehaviour
                 Character.GetComponent<CharacterAI>().InitCharacter(i, _arrowpool);
                 Character.transform.position = Data.Instance.CharacterPosition[i];
             }
-        }
-       
+        }       
+    }
+
+    public void SetBGMVolume()
+    {        
+        _audio.volume = PlayerPrefs.GetFloat("BGMVolume", 0.5f);
     }
 
     ArrowController CreateArrow()
@@ -389,10 +362,6 @@ public class GameManager : MonoBehaviour
         ExecutionReincarnation();
     }
 
-    public void OnSaveButton()
-    {
-        Data.Instance.SaveInventoryData();
-        SaveGameData();
-    }
+    
     #endregion
 }

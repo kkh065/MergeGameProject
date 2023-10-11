@@ -38,8 +38,8 @@ public class CharacterAI : MonoBehaviour
         //치명타 배율
         int a = Data.Instance.GetUpgradeData(UpgradeType.Gold, 3).Level * (int)Data.Instance.GetUpgradeData(UpgradeType.Gold, 3).Increase;
         int b = Data.Instance.GetUpgradeData(UpgradeType.Attack, 3).Level * (int)Data.Instance.GetUpgradeData(UpgradeType.Attack, 3).Increase;
-        float c = (a + b + 200) / 100;
-        _criticalDamage = (int)((float)_damage * c);
+        float c = (a + b + 200) / 100f;
+        _criticalDamage = (int)(_damage * c);
 
         //공격속도
         float speed1 = Data.Instance.GetUpgradeData(UpgradeType.Gold, 1).Level * Data.Instance.GetUpgradeData(UpgradeType.Gold, 1).Increase;

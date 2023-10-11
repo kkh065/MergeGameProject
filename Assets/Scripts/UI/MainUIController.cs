@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,8 +17,7 @@ public class MainUIController : MonoBehaviour
     #endregion
 
     private void Awake()
-    {
-        
+    {        
         MergeInventoryToggleIsON();
     }
 

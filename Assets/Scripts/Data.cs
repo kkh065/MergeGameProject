@@ -9,16 +9,21 @@ using UnityEngine.SceneManagement;
 public class Data : MonoBehaviour
 {
     #region 지역변수
+
     ArrowLevelData _arrowLevelData;
+    AsyncOperation Operation;
+    string Path;
+    bool _isGo = false;
+
+    List<AudioClip> _soundEffect = new List<AudioClip>();
+    public List<AudioClip> SoundEffect { get { return _soundEffect; } }
+
     public UpgradeDataList UpgradeDatas;
     
     public ArrowLevelData ArrowLevelData { get { return _arrowLevelData; } set { _arrowLevelData = value; } }
 
     public bool IsLoadEnd { set; get; }
-    string Path;
 
-    bool _isGo = false;
-    AsyncOperation Operation;
 
     Vector3[] _characterPosition = new Vector3[8]
     {
@@ -55,15 +60,10 @@ public class Data : MonoBehaviour
         if (null == instance)
         {
             instance = this;
-
-            //씬 전환이 되더라도 파괴되지 않게 한다.
             DontDestroyOnLoad(this.gameObject);
         }
         else
         {
-            //만약 씬 이동이 되었는데 그 씬에도 Hierarchy에 GameMgr이 존재할 수도 있다.
-            //그럴 경우엔 이전 씬에서 사용하던 인스턴스를 계속 사용해주는 경우가 많은 것 같다.
-            //그래서 이미 전역변수인 instance에 인스턴스가 존재한다면 자신을 삭제해준다.
             Destroy(this.gameObject);
         }
     }
@@ -451,7 +451,8 @@ public class Data : MonoBehaviour
 
     void LoadSoundData()
     {
-
+        _soundEffect.Add(Resources.Load<AudioClip>("Sound/Button"));
+        _soundEffect.Add(Resources.Load<AudioClip>("Sound/Toggle"));
     }
 }
 #region 세이브데이터 클래스
@@ -538,5 +539,6 @@ public enum MonsterType
 
 public enum SoundIndex
 {
-
+    UIButton,
+    UIToggle,
 }
