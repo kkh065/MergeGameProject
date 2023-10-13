@@ -46,18 +46,13 @@ public class Monster : MonoBehaviour
         Debug.Log($"몬스터 체력 : {_hp}");
         _targetPos = GameManager.Instance.GetWallPos();
         _pool = pool;
-    }
-
-    private void FixedUpdate()
-    {
-        
+        _hpPanel.SetActive(false);
     }
 
     public void TakeDamage(int dmg)
     {
         _hp -= dmg;
         SetHpSlider();
-        Debug.Log($"받은 데미지 : {dmg}");
         if( _hp <= 0 )
         {
             GameManager.Instance.MonsterDie(gameObject, _type);

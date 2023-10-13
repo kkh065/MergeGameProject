@@ -17,8 +17,9 @@ public class MainUIController : MonoBehaviour
     #endregion
 
     private void Awake()
-    {        
-        MergeInventoryToggleIsON();
+    {
+        AllTabClose();
+        MergeInventoryOpen();
     }
 
     public void Start()
@@ -87,34 +88,54 @@ public class MainUIController : MonoBehaviour
 
     #region 토글제어
 
-    public void CharacterToggleIsON()
+    public void CharacterToggleIsON(bool IsOn)
     {
-        AllTabClose();
-        CharacterOpen();
+        if(IsOn)
+        {
+            AllTabClose();
+            CharacterOpen();
+            UIManager.Instance.PLayUISound(SoundIndex.UIToggle);
+        }       
     }
 
-    public void UpgradeToggleIsON()
+    public void UpgradeToggleIsON(bool IsOn)
     {
-        AllTabClose();
-        UpgradeOpne();
+        if (IsOn)
+        {
+            AllTabClose();
+            UpgradeOpne();
+            UIManager.Instance.PLayUISound(SoundIndex.UIToggle);
+        }
     }
 
-    public void MergeInventoryToggleIsON()
+    public void MergeInventoryToggleIsON(bool IsOn)
     {
-        AllTabClose();
-        MergeInventoryOpen();
+        if (IsOn)
+        {
+            AllTabClose();
+            MergeInventoryOpen();
+            UIManager.Instance.PLayUISound(SoundIndex.UIToggle);
+        }
     }
 
-    public void ContentsToggleIsON()
+    public void ContentsToggleIsON(bool IsOn)
     {
-        AllTabClose();
-        ContentsOpen();
+        if (IsOn)
+        {
+            AllTabClose();
+            ContentsOpen();
+            UIManager.Instance.PLayUISound(SoundIndex.UIToggle);
+        }
     }
 
-    public void ShopToggleIsON()
+    public void ShopToggleIsON(bool IsOn)
     {
-        AllTabClose();
-        ShopOpen();
+        if (IsOn)
+        {
+            AllTabClose();
+            ShopOpen();
+            UIManager.Instance.PLayUISound(SoundIndex.UIToggle);
+        }
     }
     
     void AllTabClose()
@@ -158,39 +179,60 @@ public class MainUIController : MonoBehaviour
     void UpgradeOpne()
     {
         _upgrade.SetActive(true);
-        GoldUpgradeToggleOn();
-    }
-
-    //업그레이드 탭 토글제어
-
-    public void GoldUpgradeToggleOn()
-    {
         AllUpgradeTabClose();
         GoldUpgradeOpen();
     }
 
-    public void ManagementUpgradeToggleOn()
+    //업그레이드 탭 토글제어
+
+    public void GoldUpgradeToggleOn(bool IsOn)
     {
-        AllUpgradeTabClose();
-        ManagementUpgradeOpen();
+        if (IsOn)
+        {
+            AllUpgradeTabClose();
+            GoldUpgradeOpen();
+            UIManager.Instance.PLayUISound(SoundIndex.UIToggle);
+        }
     }
 
-    public void AttackUpgradeToggleOn()
+    public void ManagementUpgradeToggleOn(bool IsOn)
     {
-        AllUpgradeTabClose();
-        AttckUpgradeOpen();
+        if (IsOn)
+        {
+            AllUpgradeTabClose();
+            ManagementUpgradeOpen();
+            UIManager.Instance.PLayUISound(SoundIndex.UIToggle);
+        }
     }
 
-    public void MakingUpgradeToggleOn()
+    public void AttackUpgradeToggleOn(bool IsOn)
     {
-        AllUpgradeTabClose();
-        MakingUpgradeOpen();
+        if (IsOn)
+        {
+            AllUpgradeTabClose();
+            AttckUpgradeOpen();
+            UIManager.Instance.PLayUISound(SoundIndex.UIToggle);
+        }
     }
 
-    public void SpecialUpgradeToggleOn()
+    public void MakingUpgradeToggleOn(bool IsOn)
     {
-        AllUpgradeTabClose();
-        SpecialUpgradeOpen();
+        if (IsOn)
+        {
+            AllUpgradeTabClose();
+            MakingUpgradeOpen();
+            UIManager.Instance.PLayUISound(SoundIndex.UIToggle);
+        }
+    }
+
+    public void SpecialUpgradeToggleOn(bool IsOn)
+    {
+        if (IsOn)
+        {
+            AllUpgradeTabClose();
+            SpecialUpgradeOpen();
+            UIManager.Instance.PLayUISound(SoundIndex.UIToggle);
+        }
     }
 
     void AllUpgradeTabClose()
@@ -232,6 +274,7 @@ public class MainUIController : MonoBehaviour
 
     void TabUpgradeButton(UpgradeType type, int idx)
     {
+        UIManager.Instance.PLayUISound(SoundIndex.UIButton);
         UpgradeData ud = Data.Instance.GetUpgradeData(type, idx);
         if(ud.Level < ud.MaxLevel)
         {
@@ -442,6 +485,7 @@ public class MainUIController : MonoBehaviour
             _makingCooltime = 5f -
                 ((float)Data.Instance.GetUpgradeData(UpgradeType.Making, 0).Level * Data.Instance.GetUpgradeData(UpgradeType.Making, 0).Increase);
         }
+        UIManager.Instance.PLayUISound(SoundIndex.UIButton);
     }
 
     public void OnClickMergeArrow()
@@ -451,6 +495,7 @@ public class MainUIController : MonoBehaviour
             MergeArrow();
             _mergeCooltime = 1;
         }
+        UIManager.Instance.PLayUISound(SoundIndex.UIButton);
     }
 
     void MergeArrow()
@@ -482,6 +527,7 @@ public class MainUIController : MonoBehaviour
         GameManager.Instance.InventoryData = datas.ToList();
         InventorySlotAllClose();
         UpdateInventory();
+        UIManager.Instance.PLayUISound(SoundIndex.UIButton);
     }
 
    

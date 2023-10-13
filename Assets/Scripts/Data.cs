@@ -24,6 +24,9 @@ public class Data : MonoBehaviour
 
     public bool IsLoadEnd { set; get; }
 
+    Dictionary<string, Sprite> _currencyImage = new Dictionary<string, Sprite>();
+    public Dictionary<string, Sprite> CurrencyImage { get { return _currencyImage; } }
+
 
     Vector3[] _characterPosition = new Vector3[8]
     {
@@ -332,6 +335,7 @@ public class Data : MonoBehaviour
         Operation = SceneManager.LoadSceneAsync("GameScene");
         Operation.allowSceneActivation = false;
         LoadSoundData();
+        LoadCurrencyImage();
 
         while (true)
         {
@@ -349,7 +353,6 @@ public class Data : MonoBehaviour
         }
         yield return null;
     }
-
 
     async void ReadUpgradeData()
     {
@@ -371,7 +374,6 @@ public class Data : MonoBehaviour
                         UpgradeDataCreate();
                         SaveUpgradeData();
                     }
-                    Debug.Log(UpgradeDatas.upgradeDataList.Count);
                     InventoryDataLoad();
                 });
             }
@@ -382,31 +384,6 @@ public class Data : MonoBehaviour
             SaveUpgradeData();
             InventoryDataLoad();
         }
-
-        /*
-        //제이슨파일에서 업그레이드 데이터 읽어오기
-        if (File.Exists(Application.persistentDataPath + "/UpgradeLevelData.json"))
-        {
-            string json = "";
-            using (StreamReader inStream = new StreamReader(Application.persistentDataPath + "/UpgradeLevelData.json"))
-            {
-                json = inStream.ReadToEnd();
-            }
-
-            if (string.IsNullOrEmpty(json) == false)
-            {
-                _upgradeData = JsonUtility.FromJson<UpgradeData>(json);
-            }
-            else Debug.Log("내용이 없습니다.");
-        }
-        else
-        {
-            Debug.Log("파일이 없습니다.");
-            SaveUpgradeData();
-        }
-
-        Debug.Log("로딩완료");
-        */
     }
 
     async void InventoryDataLoad()
@@ -449,6 +426,12 @@ public class Data : MonoBehaviour
         return null;
     }
 
+    void LoadCurrencyImage()
+    {
+        _currencyImage.Add("Gold", Resources.Load<Sprite>("Currency/Gold"));
+        _currencyImage.Add("Dia", Resources.Load<Sprite>("Currency/Dia"));
+        _currencyImage.Add("Reincarnation", Resources.Load<Sprite>("Currency/Reincarnation"));
+    }
     void LoadSoundData()
     {
         _soundEffect.Add(Resources.Load<AudioClip>("Sound/Button"));
@@ -460,35 +443,7 @@ public class Data : MonoBehaviour
 [Serializable]
 public class UpgradeDataList
 {
-    //업그레이드 데이터
     public List<UpgradeData> upgradeDataList = new List<UpgradeData>();
-    /*
-    //골드 업그레이드
-    public int GoldAttackDamageLevel = 0;
-    public int GoldAttackSpeedLevel = 1;
-    public int GoldCriticalLevel = 2;
-    public int GoldCriticalDamageLevel = 3;
-    public int GoldWallHpLevel = 4;
-
-    //관리 업그레이드
-    public int ManagementArcherLevel = 0;
-    public int ManagementWallHpLevel = 1;
-
-    //공격 업그레이드
-    public int DiaAttackDamegeLevel = 0;
-    public int DiaAttackSpeedLevel = 1;
-    public int DiaCriticalLevel = 2;
-    public int DiaCriticalDamageLevel = 3;
-
-    //제작 업그레이드
-    public int MakingSpeedLevel = 0;
-    public int MakingArrowLevelLevel = 1;
-    public int DiaMakingArrowLevelLevel = 2;
-    public int MakingAutoSpeedLevel = 3;
-    public int MergeAutoSpeedLevel = 4;
-
-    //특수 업그레이드 (카드개념? 보스전 연동 보상)
-    */
 }
 [Serializable]
 public class UpgradeData
@@ -499,7 +454,7 @@ public class UpgradeData
     public int MaxLevel;
     public int Price;
     public UpgradeType UpgradeType;
-    public PriceType priceType; // 0 = 골드, 1 = 다이아
+    public PriceType priceType;
     public String Explan;
     public float Increase;
     public int ButtonIndex;

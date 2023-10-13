@@ -202,11 +202,11 @@ public class GameManager : MonoBehaviour
     void ExecutionReincarnation()
     {
         //몬스터 전부삭제
-        for(int i = 0; i < _liveMonsterList.Count; i++)
+        for (int i = 0; i < _liveMonsterList.Count; i++)
         {
             _liveMonsterList[i].ResetMonster();
-            _liveMonsterList.Remove(_liveMonsterList[i]);
         }
+        _liveMonsterList.Clear();
 
         Reincarnation += (_stage - 1) * 10;
         _fade.FaidIn();
@@ -214,7 +214,6 @@ public class GameManager : MonoBehaviour
     }
     public void StageLoad()
     {
-        Debug.Log("스테이지 로드");
         //죽거나 환생 시 페이드인 후, 스테이지를 1으로만들고 시작
         //담장체력초기화
         _wallHp = _wallMaxHp;
@@ -224,7 +223,6 @@ public class GameManager : MonoBehaviour
 
     public void WaveLoad()
     {
-        Debug.Log($"웨이브 시작. 현재 웨이브 : {_stage}");
         Invoke("MonsterSpawn", 1f);
         _StageText.text = "Stage " + _stage.ToString();
     }
@@ -286,7 +284,6 @@ public class GameManager : MonoBehaviour
 
     void ReleaseMonster(Monster monster)
     {
-        _liveMonsterList.Remove(monster);
         monster.gameObject.SetActive(false);       
     }
 
@@ -301,9 +298,7 @@ public class GameManager : MonoBehaviour
     //캐릭터 데이터에서 숫자 받아와서 그만큼 생성 하고 이닛실행
 
     public void UpdateCaracter()
-    {
-        Debug.Log("캐릭터 세팅 시작");
-        
+    {        
         for (int i = 0; i < 1 + Data.Instance.GetUpgradeData(UpgradeType.Management, 0).Level; i++)
         {
             bool IsCreate = true;

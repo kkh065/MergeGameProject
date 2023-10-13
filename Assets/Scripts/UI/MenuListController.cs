@@ -13,7 +13,7 @@ public class MenuListController : MonoBehaviour
     public void OpenMenu()
     {
         MenuList.SetActive(true);
-        //레벨에 맞춰서 오픈된 컨텐츠 버튼만 노출되게끔 코딩
+        UIManager.Instance.PLayUISound(SoundIndex.UIButton);
     }
 
     void EnvetCloseMenu(object sender, EventArgs s)
@@ -23,11 +23,14 @@ public class MenuListController : MonoBehaviour
 
     void CloseMenu()
     {
+        UIManager.Instance.PLayUISound(SoundIndex.UIButton);
         MenuList.SetActive(false);
+        UIManager.Instance.UIActive = false;
     }
 
     public void OnSaveButton()
     {
+        UIManager.Instance.PLayUISound(SoundIndex.UIButton);
         Data.Instance.SaveInventoryData();
         GameManager.Instance.SaveGameData();
         CloseMenu();
@@ -35,11 +38,14 @@ public class MenuListController : MonoBehaviour
 
     public void OnExitGameButton()
     {
-        Application.Quit();
+        UIManager.Instance.PLayUISound(SoundIndex.UIButton);
+        UIManager.Instance.OpenNotice("게임을 종료하시겠습니까?", () => Application.Quit(), UIManager.Instance.AllClose);
     }
 
     public void OnOptionButton()
     {
+        UIManager.Instance.PLayUISound(SoundIndex.UIButton);
+        UIManager.Instance.UIActive = true;
         OptionUI.SetActive(true);
         CloseMenu();
     }

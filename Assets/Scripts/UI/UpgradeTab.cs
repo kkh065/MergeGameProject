@@ -11,18 +11,32 @@ public class UpgradeTab : MonoBehaviour
     [SerializeField] Text _textPrice;
     [SerializeField] Button _upgradeButton;
     [SerializeField] Image _imageIcon;
-    public void Init(UpgradeData Data, Action<UpgradeType, int> ButtonAction)
+    [SerializeField] Image _currencyIcon;
+    public void Init(UpgradeData UPData, Action<UpgradeType, int> ButtonAction)
     {
-        _nowLevel.text = $"LV.{Data.Level}";
-        _upgradeName.text = $"{Data.Name}(MAX {Data.MaxLevel})";
-        _textInfo.text = Data.Explan;        
-        _textPrice.text = (Data.Price * Data.Level).ToString();
-        _upgradeButton.onClick.AddListener(() => ButtonAction(Data.UpgradeType, Data.ButtonIndex));
-        _imageIcon.sprite = Resources.Load<Sprite>("UpgradeIcon/Icon" + (int)Data.UpgradeType + Data.ButtonIndex);
-        //값의 타입에 따라서 리소스 모양 바꿔줘야함
-        if (Data.Level < Data.MaxLevel)
+        _nowLevel.text = $"LV.{UPData.Level}";
+        _upgradeName.text = $"{UPData.Name}(MAX {UPData.MaxLevel})";
+        _textInfo.text = UPData.Explan;
+        _textPrice.text = UPData.Price.ToString();
+        _upgradeButton.onClick.AddListener(() => ButtonAction(UPData.UpgradeType, UPData.ButtonIndex));
+        _imageIcon.sprite = Resources.Load<Sprite>("UpgradeIcon/Icon" + (int)UPData.UpgradeType + UPData.ButtonIndex);
+
+        switch(UPData.priceType)
         {
-            _upgradeValue.text = $"+ {Data.Increase}";
+            case PriceType.Gold:
+                _currencyIcon.sprite = Data.Instance.CurrencyImage["Gold"];
+                break;
+            case PriceType.Dia:
+                _currencyIcon.sprite = Data.Instance.CurrencyImage["Dia"];
+                break;
+            case PriceType.Reincarnation:
+                _currencyIcon.sprite = Data.Instance.CurrencyImage["Reincarnation"];                
+                break;
+        }
+
+        if (UPData.Level < UPData.MaxLevel)
+        {
+            _upgradeValue.text = $"+ {UPData.Increase}";
         }
         else
         {
@@ -34,7 +48,7 @@ public class UpgradeTab : MonoBehaviour
     {
         _nowLevel.text = $"LV.{Data.Level}";
         _textInfo.text = Data.Explan;
-        _textPrice.text = (Data.Price * Data.Level).ToString();
+        _textPrice.text = Data.Price.ToString();
         //레벨에 따라서 버튼 세팅 변경
 
         if (Data.Level < Data.MaxLevel)

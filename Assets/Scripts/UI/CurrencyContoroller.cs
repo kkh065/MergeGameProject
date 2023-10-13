@@ -7,7 +7,6 @@ public class CurrencyContoroller : MonoBehaviour
     [SerializeField] Text _diaText;
     [SerializeField] Text _reincarnationText;
 
-
     public void UpdateGold()
     {
         _goldText.text = GameManager.Instance.Gold.ToString();

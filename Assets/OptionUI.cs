@@ -44,6 +44,14 @@ public class OptionUI : MonoBehaviour
         CloseOption();
     }
 
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            CloseOption();
+        }
+    }
+
     void EnvetCloseMenu(object sender, EventArgs s)
     {
         CloseOption();

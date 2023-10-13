@@ -891,3 +891,4 @@ MonoBehaviour:
   _textPrice: {fileID: 9120318175029426472}
   _upgradeButton: {fileID: 7962704208449149259}
   _imageIcon: {fileID: 7962704209348905812}
+  _currencyIcon: {fileID: 7962704209472439900}
