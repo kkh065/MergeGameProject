@@ -75,7 +75,7 @@ public class MainUIController : MonoBehaviour
         if(_makingCooltime > 0)
         {
             _makingCooltime -= Time.deltaTime;
-            _imageMakingCooltime.fillAmount = _makingCooltime / 10f;
+            _imageMakingCooltime.fillAmount = _makingCooltime / _maxMakingCooltime;
         }
 
         //수동합성 쿨타임
@@ -403,6 +403,7 @@ public class MainUIController : MonoBehaviour
     float _autoMergeTimer = 0;
     float _autoMakingTimer = 0;
     float _autoSaveTimer = 0;
+    float _maxMakingCooltime = 0;
     float _makingCooltime = 0;
     float _mergeCooltime = 0;
 
@@ -474,6 +475,7 @@ public class MainUIController : MonoBehaviour
             //_inventorySlot.GetChild(_inventoryData.Count - 1).GetComponent<InventorySlot>().Init(_inventoryData[_inventoryData.Count - 1]);
             InventorySlotAllClose();
             UpdateInventory();
+            UIManager.Instance.PLayUISound(SoundIndex.MakingArrow);
         }
     }
 
@@ -482,10 +484,10 @@ public class MainUIController : MonoBehaviour
         if(_makingCooltime <= 0)
         {
             MakingArrow();
-            _makingCooltime = 5f -
+            _maxMakingCooltime = 5f -
                 ((float)Data.Instance.GetUpgradeData(UpgradeType.Making, 0).Level * Data.Instance.GetUpgradeData(UpgradeType.Making, 0).Increase);
+            _makingCooltime = _maxMakingCooltime;
         }
-        UIManager.Instance.PLayUISound(SoundIndex.UIButton);
     }
 
     public void OnClickMergeArrow()
@@ -495,7 +497,6 @@ public class MainUIController : MonoBehaviour
             MergeArrow();
             _mergeCooltime = 1;
         }
-        UIManager.Instance.PLayUISound(SoundIndex.UIButton);
     }
 
     void MergeArrow()
@@ -512,6 +513,7 @@ public class MainUIController : MonoBehaviour
                         GameManager.Instance.InventoryData.RemoveAt(j);
                         InventorySlotAllClose();
                         UpdateInventory();
+                        UIManager.Instance.PLayUISound(SoundIndex.MergeArrow);
                         return;
                     }
                 }

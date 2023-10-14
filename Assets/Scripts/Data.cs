@@ -436,6 +436,9 @@ public class Data : MonoBehaviour
     {
         _soundEffect.Add(Resources.Load<AudioClip>("Sound/Button"));
         _soundEffect.Add(Resources.Load<AudioClip>("Sound/Toggle"));
+        _soundEffect.Add(Resources.Load<AudioClip>("Sound/WallTakeDamage"));
+        _soundEffect.Add(Resources.Load<AudioClip>("Sound/MakingArrow"));
+        _soundEffect.Add(Resources.Load<AudioClip>("Sound/MergeArrow"));
     }
 }
 #region 세이브데이터 클래스
@@ -496,4 +499,7 @@ public enum SoundIndex
 {
     UIButton,
     UIToggle,
+    WallTakeDamage,
+    MakingArrow,
+    MergeArrow,
 }

@@ -196,6 +196,12 @@ public class GameManager : MonoBehaviour
         return 0;
     }
 
+    public void hitWall(int AttackDamage)
+    {
+        _hpSlider.HitSound();
+        WallHP -= AttackDamage;
+    }
+
 
     #region 몬스터 스폰 및 ai 구현    
 

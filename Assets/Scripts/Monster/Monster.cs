@@ -19,13 +19,7 @@ public class Monster : MonoBehaviour
     float attackCooltime = 0;
     MonsterType _type;
     IObjectPool<Monster> _pool;
-    
-
-    private void Awake()
-    {
-        _hpPanel.SetActive(false);
-    }
-
+            
     public void InitMonster(MonsterType type, IObjectPool<Monster> pool)
     {
         _targetPos = GameManager.Instance.GetWallPos();
@@ -71,7 +65,7 @@ public class Monster : MonoBehaviour
             if (attackCooltime > attackSpeed)
             {
                 //АјАн
-                GameManager.Instance.WallHP -= _attackDamage;
+                GameManager.Instance.hitWall(_attackDamage);
                 attackCooltime = 0;
                 _ani.SetBool("isWalk", false);
                 _ani.SetTrigger("Attack");
@@ -93,6 +87,7 @@ public class Monster : MonoBehaviour
 
     void SetHpSlider()
     {
+        Debug.Log(_hpPanel.activeSelf);
         if (_hpPanel.activeSelf == false) _hpPanel.SetActive(true);
         _imageHP.fillAmount = (float)_hp / (float)_maxHP;
     }
