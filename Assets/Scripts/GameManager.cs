@@ -63,7 +63,7 @@ public class GameManager : MonoBehaviour
             if (_wallHp <= 0)
             {
                 OnReincarnationButton();
-            }
+            }            
         } 
     }
     int _wallMaxHp = 0;
@@ -128,17 +128,17 @@ public class GameManager : MonoBehaviour
         //재화데이터
         if(PlayerPrefs.HasKey("Gold"))
         {
-            _gold = PlayerPrefs.GetInt("Gold");
+            Gold = PlayerPrefs.GetInt("Gold");
         }
 
         if (PlayerPrefs.HasKey("Dia"))
         {
-            _dia = PlayerPrefs.GetInt("Dia");
+            Dia = PlayerPrefs.GetInt("Dia");
         }
 
         if (PlayerPrefs.HasKey("Reincarnation"))
         {
-            _reincarnation = PlayerPrefs.GetInt("Reincarnation");
+            Reincarnation = PlayerPrefs.GetInt("Reincarnation");
         }
 
 
@@ -181,7 +181,7 @@ public class GameManager : MonoBehaviour
 
     public Vector2 GetWallPos() => _wall.transform.position;
 
-    public int GetMakingArrowLevel() //제작화살레벨 업그레이드 추가시 여기 수정해야함
+    public int GetMakingArrowLevel()
     {
         int MakinArrowLevel = 1 +
             (Data.Instance.GetUpgradeData(UpgradeType.Making, 1).Level * (int)Data.Instance.GetUpgradeData(UpgradeType.Making, 1).Increase) +
@@ -223,6 +223,7 @@ public class GameManager : MonoBehaviour
         //죽거나 환생 시 페이드인 후, 스테이지를 1으로만들고 시작
         //담장체력초기화
         _wallHp = _wallMaxHp;
+        _hpSlider.SetHpUI();
         _fade.FaidOut();
     }
 
@@ -249,7 +250,7 @@ public class GameManager : MonoBehaviour
             for (int i = 0; i < 5; i++)
             {
                 Monster m = _monsterPool.Get();
-                m.transform.position = _monsterSpawnPoint.transform.position + new Vector3(UnityEngine.Random.Range(-1, 1f), UnityEngine.Random.Range(-1, 1f), 0);
+                m.transform.position = _monsterSpawnPoint.transform.position + new Vector3(UnityEngine.Random.Range(-1, 1f), UnityEngine.Random.Range(-1.5f, 0.5f), 0);
                 m.InitMonster(MonsterType.Nomal, _monsterPool);
                 _liveMonsterList.Add(m);
             }
@@ -304,7 +305,7 @@ public class GameManager : MonoBehaviour
     //캐릭터 데이터에서 숫자 받아와서 그만큼 생성 하고 이닛실행
 
     public void UpdateCaracter()
-    {        
+    {
         for (int i = 0; i < 1 + Data.Instance.GetUpgradeData(UpgradeType.Management, 0).Level; i++)
         {
             bool IsCreate = true;

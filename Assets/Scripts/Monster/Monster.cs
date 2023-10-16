@@ -35,7 +35,6 @@ public class Monster : MonoBehaviour
         }
 
         _hp = _maxHP;
-        Debug.Log($"몬스터 체력 : {_hp}");
         _targetPos = GameManager.Instance.GetWallPos();
         _pool = pool;
         _hpPanel.SetActive(false);
@@ -85,7 +84,6 @@ public class Monster : MonoBehaviour
 
     void SetHpSlider()
     {
-        Debug.Log(_hpPanel.activeSelf);
         if (_hpPanel.activeSelf == false) _hpPanel.SetActive(true);
         _imageHP.fillAmount = (float)_hp / (float)_maxHP;
     }

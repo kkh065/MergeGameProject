@@ -172,11 +172,13 @@ public class MainUIController : MonoBehaviour
     [SerializeField] GameObject _specialUpgradeContent;
 
     [SerializeField] GameObject _upgradeTab;
+    [SerializeField] Toggle _toggleGold;
     //업그레이드 탭 오픈
     void UpgradeOpne()
     {
         _upgrade.SetActive(true);
         AllUpgradeTabClose();
+        _toggleGold.isOn = true;
         GoldUpgradeOpen();
     }
 
@@ -304,11 +306,11 @@ public class MainUIController : MonoBehaviour
 
     void RefreshData(UpgradeData data)
     {
-        data.Level++;
-        GameManager.Instance.SaveGameData();
-        Data.Instance.SaveUpgradeData();
+        data.Level++;        
         UpdateGameData(data);
         UpgradeTabList[data].GetComponent<UpgradeTab>().UpdateTabData(data);
+        GameManager.Instance.SaveGameData();
+        Data.Instance.SaveUpgradeData();
     }
 
     void UpdateGameData(UpgradeData data)
@@ -328,7 +330,10 @@ public class MainUIController : MonoBehaviour
             case UpgradeType.Management:
                 switch (data.ButtonIndex)
                 {
-                    case 0: GameManager.Instance.UpdateCaracter(); break; //캐릭터 수 증가
+                    case 0: 
+                        GameManager.Instance.UpdateCaracter();
+                        UpdateEquip();
+                        break; //캐릭터 수 증가
                     case 1: GameManager.Instance.UpdateWallData(); break; //담장체력 증가
                 }
                 break;
@@ -345,9 +350,11 @@ public class MainUIController : MonoBehaviour
                 switch (data.ButtonIndex)
                 {
                     case 0:
+                        //수동제작시간감소, 
+                        break;
                     case 1:
                     case 2:
-                        //수동제작시간감소, 제작화살레벨 증가 알아서 자동적용.
+                        AllInventoryDataUpdate();//제작화살레벨;
                         break;
                     case 3:
                     case 4:
@@ -356,6 +363,28 @@ public class MainUIController : MonoBehaviour
                 }
                 break;
         }
+    }
+
+    void AllInventoryDataUpdate()
+    {
+        int level = GameManager.Instance.GetMakingArrowLevel();
+        for(int i = 0; i < GameManager.Instance.EquipArrowData.Length; i++)
+        {
+            if (GameManager.Instance.EquipArrowData[i] != 0 && GameManager.Instance.EquipArrowData[i] < level)
+            {
+                GameManager.Instance.EquipArrowData[i] = level;
+            }
+        }
+        for (int i = 0; i < GameManager.Instance.InventoryData.Count; i++)
+        {
+            if (GameManager.Instance.InventoryData[i] < level)
+            {
+                GameManager.Instance.InventoryData[i] = level;
+            }
+        }
+        InventorySlotAllClose();
+        UpdateInventory();
+        UpdateEquip();
     }
 
     void GoldUpgradeOpen()
@@ -435,6 +464,13 @@ public class MainUIController : MonoBehaviour
     //장비창
     void UpdateEquip()
     {
+        for(int i = 0; i < 1 + Data.Instance.GetUpgradeData(UpgradeType.Management, 0).Level; i++)
+        {
+            if(GameManager.Instance.EquipArrowData[i] == 0)
+            {
+                GameManager.Instance.EquipArrowData[i] = GameManager.Instance.GetMakingArrowLevel();
+            }
+        }
         //업그레이드 데이터 받아와서 수정 필요
         //장비창 갱신 - 세이브데이터에다가 인벤토리 데이터랑 장비창 데이터 저장하는것 만들기
         for (int i = 0; i < GameManager.Instance.EquipArrowData.Length; i++)
@@ -469,7 +505,6 @@ public class MainUIController : MonoBehaviour
         if (GameManager.Instance.InventoryData.Count < 40)
         {
             GameManager.Instance.InventoryData.Add(GameManager.Instance.GetMakingArrowLevel());
-            //_inventorySlot.GetChild(_inventoryData.Count - 1).GetComponent<InventorySlot>().Init(_inventoryData[_inventoryData.Count - 1]);
             InventorySlotAllClose();
             UpdateInventory();
             UIManager.Instance.PLayUISound(SoundIndex.MakingArrow);

@@ -138,4 +138,11 @@ public class OptionUI : MonoBehaviour
             _sliderEffectVolume.interactable = true;
         }
     }
+
+    public void TestShowMeTheMoney()
+    {
+        GameManager.Instance.Gold += 999;
+        GameManager.Instance.Dia += 999;
+        GameManager.Instance.Reincarnation += 999;
+    }
 }

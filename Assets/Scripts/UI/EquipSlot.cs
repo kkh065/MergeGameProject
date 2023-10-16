@@ -30,6 +30,7 @@ public class EquipSlot : MonoBehaviour
 
         inven.Init(GameManager.Instance.InventoryData[inven.Index], inven.Index);
         Init(GameManager.Instance.EquipArrowData[Index], Index);
+        GameManager.Instance.UpdateCaracter();
         UIManager.Instance.PLayUISound(SoundIndex.UIButton);
     }
 }

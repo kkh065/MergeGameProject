@@ -83,6 +83,14 @@ public class Data : MonoBehaviour
         StartCoroutine(SceneLoad());
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F8))
+        {
+            PlayerPrefs.DeleteAll();
+        }
+    }
+
 
     #region 세이브
     public void SaveUpgradeData()
@@ -117,7 +125,6 @@ public class Data : MonoBehaviour
         data.Name = "기본공격력";
         data.Level = 0;
         data.MaxLevel = 99999;
-        data.Explan = $"{data.Name}이 {data.Increase * data.Level}만큼 증가";
         data.Increase = 5;
         data.Price = 100 * (data.Level + 1);
         data.UpgradeType = UpgradeType.Gold;
@@ -130,7 +137,6 @@ public class Data : MonoBehaviour
         data.Name = "공격속도";
         data.Level = 0;
         data.MaxLevel = 20;
-        data.Explan = $"{data.Name}가 {data.Increase * data.Level}만큼 증가";
         data.Increase = 0.01f;
         data.Price = 100 * (data.Level + 1);
         data.UpgradeType = UpgradeType.Gold;
@@ -143,7 +149,6 @@ public class Data : MonoBehaviour
         data.Name = "치명타확률";
         data.Level = 0;
         data.MaxLevel = 20;
-        data.Explan = $"{data.Name}이 {data.Increase * data.Level}%만큼 증가";
         data.Increase = 2;
         data.Price = 100 * (data.Level + 1);
         data.UpgradeType = UpgradeType.Gold;
@@ -156,7 +161,6 @@ public class Data : MonoBehaviour
         data.Name = "치명타 데미지";
         data.Level = 0;
         data.MaxLevel = 500;
-        data.Explan = $"{data.Name}이 {data.Increase * data.Level}만큼 증가";
         data.Increase = 1;
         data.Price = 100 * (data.Level + 1);
         data.UpgradeType = UpgradeType.Gold;
@@ -169,7 +173,6 @@ public class Data : MonoBehaviour
         data.Name = "담장 강화";
         data.Level = 0;
         data.MaxLevel = 30;
-        data.Explan = $"{data.Name}이 {data.Increase * data.Level}만큼 증가";
         data.Increase = 10;
         data.Price = 100 * (data.Level + 1);
         data.UpgradeType = UpgradeType.Gold;
@@ -183,7 +186,6 @@ public class Data : MonoBehaviour
         data.Name = "아처 모집";
         data.Level = 0;
         data.MaxLevel = 7;
-        data.Explan = $"배치 가능한 아처의 수 {data.Increase * data.Level}칸 증가";
         data.Increase = 1;
         data.Price = 5 * (data.Level + 1);
         data.UpgradeType = UpgradeType.Management;
@@ -196,7 +198,6 @@ public class Data : MonoBehaviour
         data.Name = "담장 강화";
         data.Level = 0;
         data.MaxLevel = 30;
-        data.Explan = $"담장 체력 {data.Increase * data.Level} 증가";
         data.Increase = 10;
         data.Price = 5 * (data.Level + 1);
         data.UpgradeType = UpgradeType.Management;
@@ -211,7 +212,6 @@ public class Data : MonoBehaviour
         data.Name = "기본 공격력";
         data.Level = 0;
         data.MaxLevel = 500;
-        data.Explan = $"{data.Name} {data.Increase * data.Level} 증가";
         data.Increase = 5;
         data.Price = 5 * (data.Level + 1);
         data.UpgradeType = UpgradeType.Attack;
@@ -224,7 +224,6 @@ public class Data : MonoBehaviour
         data.Name = "공격속도";
         data.Level = 0;
         data.MaxLevel = 20;
-        data.Explan = $"{data.Name} {data.Increase * data.Level} 증가";
         data.Increase = 0.05f;
         data.Price = 5 * (data.Level + 1);
         data.UpgradeType = UpgradeType.Attack;
@@ -237,7 +236,6 @@ public class Data : MonoBehaviour
         data.Name = "치명타확률";
         data.Level = 0;
         data.MaxLevel = 30;
-        data.Explan = $"{data.Name} {data.Increase * data.Level}% 증가";
         data.Increase = 2;
         data.Price = 5 * (data.Level + 1);
         data.UpgradeType = UpgradeType.Attack;
@@ -250,7 +248,6 @@ public class Data : MonoBehaviour
         data.Name = "치명타 데미지";
         data.Level = 0;
         data.MaxLevel = 500;
-        data.Explan = $"{data.Name} {data.Increase * data.Level}% 증가";
         data.Increase = 5;
         data.Price = 5 * (data.Level + 1);
         data.UpgradeType = UpgradeType.Attack;
@@ -264,7 +261,6 @@ public class Data : MonoBehaviour
         data.Name = "빠른 제작";
         data.Level = 0;
         data.MaxLevel = 20;
-        data.Explan = $"화살 제작 시간 {data.Increase * data.Level}초 감소";
         data.Increase = 0.2f;
         data.Price = 5 * (data.Level + 1);
         data.UpgradeType = UpgradeType.Making;
@@ -277,7 +273,6 @@ public class Data : MonoBehaviour
         data.Name = "제작 화살 레벨 증가";
         data.Level = 0;
         data.MaxLevel = 150;
-        data.Explan = $"제작된 화살의 레벨 {data.Increase * data.Level} 증가";
         data.Increase = 1;
         data.Price = 5 * (data.Level + 1);
         data.UpgradeType = UpgradeType.Making;
@@ -290,7 +285,6 @@ public class Data : MonoBehaviour
         data.Name = "제작 화살 레벨 증가";
         data.Level = 0;
         data.MaxLevel = 80;
-        data.Explan = $"제작된 화살의 레벨 {data.Increase * data.Level} 증가";
         data.Increase = 1;
         data.Price = 5 * (data.Level + 1);
         data.UpgradeType = UpgradeType.Making;
@@ -303,7 +297,6 @@ public class Data : MonoBehaviour
         data.Name = "자동 제작";
         data.Level = 0;
         data.MaxLevel = 50;
-        data.Explan = $"(자동){11f - (data.Increase * data.Level)}초에 1번 화살을 제작";
         data.Increase = 0.2f;
         data.Price = 5 * (data.Level + 1);
         data.UpgradeType = UpgradeType.Making;
@@ -316,7 +309,6 @@ public class Data : MonoBehaviour
         data.Name = "자동 합성";
         data.Level = 0;
         data.MaxLevel = 50;
-        data.Explan = $"(자동){11f - (data.Increase * data.Level)}초에 1번 화살을 결합";
         data.Increase = 0.2f;
         data.Price = 5 * (data.Level + 1);
         data.UpgradeType = UpgradeType.Making;
@@ -458,7 +450,6 @@ public class UpgradeData
     public int Price;
     public UpgradeType UpgradeType;
     public PriceType priceType;
-    public String Explan;
     public float Increase;
     public int ButtonIndex;
 }
