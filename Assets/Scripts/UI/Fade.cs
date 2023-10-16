@@ -7,7 +7,6 @@ public class Fade : MonoBehaviour
     bool _isFadeIn;
     bool _isFadeOut;
     Color c = new Color();
-    // Start is called before the first frame update
     private void Awake()
     {
         _fade = GetComponent<Image>();
@@ -15,7 +14,6 @@ public class Fade : MonoBehaviour
         _fade.color = c;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if(_isFadeIn)

@@ -7,14 +7,12 @@ public class LoadingAni : MonoBehaviour
     Slider _sliderLoading;
 
     float _timeLoading;
-    // Start is called before the first frame update
     void Start()
     {
         _sliderLoading = GetComponent<Slider>();
         _sliderLoading.value = 0;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (_timeLoading > 100)

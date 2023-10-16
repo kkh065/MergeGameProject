@@ -47,7 +47,6 @@ public class MainUIController : MonoBehaviour
         _autoMakingTimer += Time.deltaTime;
         if(_autoMakingTimer > _autoMakingCooltime)
         {
-            Debug.Log("자동제작!");
             MakingArrow();
             _autoMakingTimer = 0;
         }
@@ -56,7 +55,6 @@ public class MainUIController : MonoBehaviour
         _autoMergeTimer += Time.deltaTime;
         if (_autoMergeTimer > _AutoMergeCooltime)
         {
-            Debug.Log("자동합성!");
             MergeArrow();
             _autoMergeTimer = 0;
         }
@@ -65,7 +63,6 @@ public class MainUIController : MonoBehaviour
         //자동저장
         if (_autoSaveTimer > 600)
         {
-            Debug.Log("자동저장!");
             Data.Instance.SaveInventoryData();
             GameManager.Instance.SaveGameData();
             _autoSaveTimer = 0;
